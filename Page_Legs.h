@@ -22,9 +22,13 @@ class LegsPage : public Page {
 
  public:
   LegsPage() {
-    this->heading = std::string("Flightplan");
+    this->heading = this->FormatString(std::string("Flightplan"), std::string("1/1"));
   }
 
+  void Update() {
+    this->Draw();
+  }
+  
  private:
 
 };

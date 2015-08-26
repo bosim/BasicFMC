@@ -20,6 +20,9 @@
 #define PAGE_H
 
 #include <string>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 float	color_green[] = { 0.0, 1.0, 0.0 };
 
@@ -38,6 +41,18 @@ class Page {
   void DrawString(float x, float y, std::string& str) {
     char* c_string = (char*) str.c_str();
     XPLMDrawString(color_green, x, y, c_string, NULL, xplmFont_Basic);
+  }
+
+  std::string FormatString(std::string left, std::string right) {
+    std::stringstream ss;
+
+    std::transform(left.begin(), left.end(), left.begin(), ::toupper);
+    std::transform(right.begin(), right.end(), right.begin(), ::toupper);
+    
+    ss << std::setw(17) << std::left << left;
+    ss << std::setw(17) << std::right << right;
+
+    return ss.str();
   }
   
   void Draw() {
@@ -70,8 +85,8 @@ class Page {
     this->DrawString(x+70, y-250, this->input);
   }
 
-  void Update() {
-    this->Draw();
+  virtual void Update() {
+    throw std::logic_error("Not implemented");
   }
 
   void HandleInput(char input_char) {

@@ -22,10 +22,15 @@ class InitPage : public Page {
 
  public:
   InitPage() {
-    this->heading = std::string("Init");
+    this->heading = this->FormatString(std::string("Init"), std::string("1/1"));
   }
 
+  void Update() {
+    this->line1_h = this->FormatString("Dep Airport", "Dest Airport");
 
+    this->Draw();
+  }
+  
  private:
 
 };
