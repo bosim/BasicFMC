@@ -28,6 +28,19 @@
 
 float	color_green[] = { 0.0, 1.0, 0.0 };
 
+const int LSK1 = 1;
+const int LSK2 = 2;
+const int LSK3 = 3;
+const int LSK4 = 4;
+const int LSK5 = 5;
+const int LSK6 = 6;
+const int RSK1 = 7;
+const int RSK2 = 8;
+const int RSK3 = 9;
+const int RSK4 = 10;
+const int RSK5 = 11;
+const int RSK6 = 12;
+
 class Page {
 
  public:
@@ -95,6 +108,10 @@ class Page {
     this->input += input_char;
   }
 
+  virtual void HandleSK(const int key) {
+    throw std::logic_error("Not implemented");
+  }
+  
   void HandleDelete() {
     if(this->input.length() > 0) {
       this->input.pop_back();

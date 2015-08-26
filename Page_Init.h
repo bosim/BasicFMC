@@ -45,6 +45,15 @@ class InitPage : public Page {
 
     this->Draw();
   }
+
+  void HandleSK(int key) {
+    switch(key) {
+    case LSK1:
+      this->flight->dep_airport = this->input;
+      this->input.clear();
+      break;
+    }
+  }
   
 };
 

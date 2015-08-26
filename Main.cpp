@@ -187,6 +187,9 @@ void InputHandler(int &dX, int &dY) {
   else if(CoordInRect(dX, dY, 47, -307, 83, -333)) {
     pages->SwitchPage("legs");
   }
+  else if(CoordInRect(dX, dY, 10, -71, 33, -87)) {
+    page->HandleSK(LSK1);
+  }
 }
 
 PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
