@@ -252,6 +252,7 @@ PLUGIN_API void	XPluginStop(void) {
   }
   
   delete pages;
+  delete flight;
 }
 
 PLUGIN_API void XPluginDisable(void) {
