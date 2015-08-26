@@ -17,11 +17,13 @@
  */
 
 #include "Page.h"
+#include "Flight.h"
 
 class LegsPage : public Page {
 
  public:
-  LegsPage() {
+  LegsPage(Flight* flight) : Page(flight) {
+
     this->heading = this->FormatString(std::string("Flightplan"), std::string("1/1"));
   }
 
@@ -29,6 +31,4 @@ class LegsPage : public Page {
     this->Draw();
   }
   
- private:
-
 };

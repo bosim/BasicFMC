@@ -16,21 +16,36 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef PAGE_INIT_H
+#define PAGE_INIT_H
+
 #include "Page.h"
+#include "Flight.h"
 
 class InitPage : public Page {
 
  public:
-  InitPage() {
+  InitPage(Flight* flight) : Page(flight) {
+
     this->heading = this->FormatString(std::string("Init"), std::string("1/1"));
-  }
+    this->line1_h = this->FormatString("Dep Airport", "Dest Airport");
+    this->line2_h = this->FormatString("", "Flight No");
+ }
 
   void Update() {
-    this->line1_h = this->FormatString("Dep Airport", "Dest Airport");
+    std::string dep_airport = this->flight->dep_airport.length() > 0 ?
+      this->flight->dep_airport : std::string("----");
+    std::string dest_airport = this->flight->dest_airport.length() > 0 ?
+      this->flight->dest_airport : std::string("----");
+    std::string flightno = this->flight->flightno.length() > 0 ?
+      this->flight->flightno : std::string("----");
+
+    this->line1 = this->FormatString(dep_airport, dest_airport);
+    this->line2 = this->FormatString("", flightno);
 
     this->Draw();
   }
   
- private:
-
 };
+
+#endif

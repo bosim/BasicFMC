@@ -24,13 +24,15 @@
 #include <iomanip>
 #include <algorithm>
 
+#include "Flight.h"
+
 float	color_green[] = { 0.0, 1.0, 0.0 };
 
 class Page {
 
  public:
-  Page() {
-
+  Page(Flight* flight) {
+    this->flight = flight;
   }
 
   void SetCoordinates(float* left, float* top) {
@@ -100,6 +102,8 @@ class Page {
   }
 
  protected:
+  Flight* flight;
+
   float* left;
   float* top;
 

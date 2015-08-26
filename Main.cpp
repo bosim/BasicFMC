@@ -39,6 +39,7 @@
 #include "Page.h"
 #include "Page_Init.h"
 #include "Page_Legs.h"
+#include "Flight.h"
 #include "Main.h"
 
 XPLMWindowID FMCWindow = NULL;
@@ -49,6 +50,7 @@ char PluginDir[255];
 XPLMTextureID Texture[MAX_TEXTURES];
 
 Pages* pages;
+Flight* flight;
 
 void InputHandler(int &dX, int &dY) {
   Page* page = pages->CurrentPage();
@@ -219,14 +221,15 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
 
   LoadTextures();
 
+  flight = new Flight();
   pages = new Pages();
         
   Page * page;
   
-  page = new InitPage();
+  page = new InitPage(flight);
   pages->RegisterPage("init", page);
 
-  page = new LegsPage();
+  page = new LegsPage(flight);
   pages->RegisterPage("legs", page);
 
   pages->SwitchPage("init");
