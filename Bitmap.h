@@ -68,6 +68,7 @@ typedef struct	tagIMAGEDATA
 int BitmapLoader(const char *FilePath, IMAGEDATA *ImageData);
 void SwapEndian(short *Data);
 void SwapEndian(int *Data);
+void SwapRedBlue(IMAGEDATA *ImageData);
 int LoadGLTexture(char *pFileName, int TextureId);
 void LoadTextures(void);
 

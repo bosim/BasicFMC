@@ -58,8 +58,8 @@ int LoadGLTexture(char *pFileName, int TextureId)
   /// Get the bitmap from the file
   if (BitmapLoader(TextureFileName, &sImageData)) {
     Status=TRUE;
-    
-    //SwapRedBlue(&sImageData);
+
+    SwapRedBlue(&sImageData);
     pImageData = sImageData.pData;
 
     /// Do the opengl stuff using XPLM functions for a friendly Xplane existence.
@@ -128,6 +128,35 @@ void SwapEndian(int *Data) {
 void SwapEndian(short *Data){}
 void SwapEndian(int *Data){}
 #endif
+
+/// Swap the red and blue pixels.
+void SwapRedBlue(IMAGEDATA *ImageData)
+{
+	unsigned char  * srcPixel;
+	int 	count;
+	int		x,y;
+	unsigned char sTemp;
+
+	/// Does not support 4 channels.
+	if (ImageData->Channels == 4)
+		return;
+
+	/// Do the swap
+	srcPixel = ImageData->pData;
+	count = ImageData->Width * ImageData->Height;
+	for (y = 0; y < ImageData->Height; ++y)
+		for (x = 0; x < ImageData->Width; ++x)
+		{
+			sTemp = srcPixel[0];
+			srcPixel[0] = srcPixel[2];
+			srcPixel[2] = sTemp;
+
+			srcPixel += 3;
+			if (x == (ImageData->Width - 1))
+				srcPixel += ImageData->Padding;
+		}
+}
+
 
 /// Generic bitmap loader to handle all platforms
 int BitmapLoader(const char * FilePath, IMAGEDATA * ImageData) {
