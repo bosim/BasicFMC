@@ -44,8 +44,12 @@
 #include "InputHandler.h"
 
 XPLMWindowID FMCWindow = NULL;
+
 XPLMHotKeyID FMCToggleHotKey = NULL;
-int FMCDisplayWindow = 0;
+XPLMHotKeyID FMCToggleKeyboardInput = NULL;
+
+bool FMCDisplayWindow = false;
+bool FMCKeyboardInput = false;
 
 char PluginDir[255];
 XPLMTextureID Texture[MAX_TEXTURES];
@@ -82,6 +86,8 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
 
   FMCToggleHotKey = XPLMRegisterHotKey(XPLM_VK_F8, xplm_DownFlag,
                                        "F8", FMCToggleHotKeyHandler, NULL);
+  FMCToggleKeyboardInput = XPLMRegisterHotKey(XPLM_VK_F9, xplm_DownFlag,
+                                       "F9", FMCToggleKeyboardInputHandler, NULL);
 
   LoadTextures();
 
@@ -133,7 +139,12 @@ void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon) {
   float PanelLeft, PanelRight, PanelBottom, PanelTop;
 
   if (FMCDisplayWindow) {
-    XPLMGetWindowGeometry(FMCWindow, &PanelWindowLeft, &PanelWindowTop, &PanelWindowRight, &PanelWindowBottom);
+    XPLMBringWindowToFront(FMCWindow);
+
+    XPLMGetWindowGeometry(FMCWindow, &PanelWindowLeft,
+                          &PanelWindowTop, &PanelWindowRight,
+                          &PanelWindowBottom);
+
     PanelLeft = PanelWindowLeft; 
     PanelRight = PanelWindowRight; 
     PanelBottom = PanelWindowBottom; 
@@ -177,6 +188,23 @@ void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon) {
 }
 
 void FMCKeyCallback(XPLMWindowID inWindowID, char inKey, XPLMKeyFlags inFlags, char inVirtualKey, void * inRefcon, int losingFocus) {
+
+  Page* page = pages->CurrentPage();
+
+  // accept key event if key is pressed down or held down (from X-Ivap)
+  if(((inFlags & xplm_DownFlag) != 0) ||
+     ((inFlags & xplm_DownFlag) == 0 &&
+      (inFlags & xplm_UpFlag) == 0)) {
+
+    switch(inKey) {
+    case 8:
+      page->HandleDelete();
+      break;
+    default:
+      page->HandleInput(inKey);
+      break;
+    }
+  }
 }
 
 int FMCMouseClickCallback(XPLMWindowID inWindowID, int x, int y, XPLMMouseStatus inMouse, void * inRefcon) {
@@ -225,6 +253,17 @@ int FMCMouseClickCallback(XPLMWindowID inWindowID, int x, int y, XPLMMouseStatus
 
 void FMCToggleHotKeyHandler(void * refCon) {
   FMCDisplayWindow = !FMCDisplayWindow;
+}
+
+void FMCToggleKeyboardInputHandler(void * refCon) {
+  FMCKeyboardInput = !FMCKeyboardInput;
+
+  if(FMCKeyboardInput) {
+    XPLMTakeKeyboardFocus(FMCWindow);
+  }
+  else {
+    XPLMTakeKeyboardFocus(0);    
+  }
 }
 
 int CoordInRect(float x, float y, float l, float t, float r, float b) {

@@ -19,6 +19,7 @@
 int	CoordInRect(float x, float y, float l, float t, float r, float b);
 
 void FMCToggleHotKeyHandler(void * refCon);
+void FMCToggleKeyboardInputHandler(void * refCon);
 
 void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon);
 

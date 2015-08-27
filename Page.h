@@ -105,7 +105,7 @@ class Page {
   }
 
   void HandleInput(char input_char) {
-    this->input += input_char;
+    this->input += toupper(input_char);
   }
 
   virtual void HandleSK(const int key) {
