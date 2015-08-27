@@ -52,6 +52,14 @@ class InitPage : public Page {
       this->flight->dep_airport = this->input;
       this->input.clear();
       break;
+    case RSK1:
+      this->flight->dest_airport = this->input;
+      this->input.clear();
+      break;
+    case RSK2:
+      this->flight->flightno = this->input;
+      this->input.clear();
+      break;
     }
   }
   
