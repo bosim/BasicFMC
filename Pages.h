@@ -30,35 +30,13 @@ class Pages {
   typedef std::map<std::string, Page*> PageMap;
   typedef std::pair<PageMap::iterator, PageMap::iterator> PageMapIterators;
 
-  Pages() {
-    this->page = NULL;
-  }
+  Pages();
 
-  void RegisterPage(std::string name, Page* page) {
-    this->pages.insert(PageMap::value_type(name, page));
-  }
+  void RegisterPage(std::string name, Page* page);
+  bool SwitchPage(std::string name);
+  Page* CurrentPage();
+  PageMapIterators PagesIterator();
 
-  bool SwitchPage(std::string name) {
-    PageMap::iterator iter;
-    PageMap::value_type value;
-    
-    iter = this->pages.find(name);
-    if(iter == pages.end()) {
-      return false;
-    }
-
-    this->page = iter->second;
-    return true;
-  }
-
-  Page* CurrentPage() {
-    return this->page;
-  }
-
-  PageMapIterators PagesIterator() {
-    return PageMapIterators(this->pages.begin(), this->pages.end());
-  }
-  
  private:
   PageMap pages;
   Page* page;

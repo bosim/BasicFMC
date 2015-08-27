@@ -16,13 +16,33 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-int CoordInRect(float x, float y, float l, float t, float r, float b);
+#include "Pages.h"
 
-void FMCToggleHotKeyHandler(void * refCon);
-void FMCToggleKeyboardInputHandler(void * refCon);
+Pages::Pages() {
+  this->page = NULL;
+}
 
-void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon);
+void Pages::RegisterPage(std::string name, Page* page) {
+  this->pages.insert(PageMap::value_type(name, page));
+}
 
-void FMCKeyCallback(XPLMWindowID inWindowID, char inKey, XPLMKeyFlags inFlags, char inVirtualKey, void * inRefcon, int losingFocus);
+bool Pages::SwitchPage(std::string name) {
+  PageMap::iterator iter;
+  PageMap::value_type value;
+    
+  iter = this->pages.find(name);
+  if(iter == pages.end()) {
+    return false;
+  }
 
-int FMCMouseClickCallback(XPLMWindowID inWindowID, int x, int y, XPLMMouseStatus inMouse, void * inRefcon);
+  this->page = iter->second;
+  return true;
+}
+
+Page* Pages::CurrentPage() {
+  return this->page;
+}
+
+Pages::PageMapIterators Pages::PagesIterator() {
+  return PageMapIterators(this->pages.begin(), this->pages.end());
+}

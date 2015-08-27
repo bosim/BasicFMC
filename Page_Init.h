@@ -19,50 +19,17 @@
 #ifndef PAGE_INIT_H
 #define PAGE_INIT_H
 
+#include <string>
+
 #include "Page.h"
 #include "Flight.h"
 
 class InitPage : public Page {
 
  public:
-  InitPage(Flight* flight) : Page(flight) {
-
-    this->heading = this->FormatString(std::string("Init"), std::string("1/1"));
-    this->line1_h = this->FormatString("Dep Airport", "Dest Airport");
-    this->line2_h = this->FormatString("", "Flight No");
- }
-
-  void Update() {
-    std::string dep_airport = this->flight->dep_airport.length() > 0 ?
-      this->flight->dep_airport : std::string("----");
-    std::string dest_airport = this->flight->dest_airport.length() > 0 ?
-      this->flight->dest_airport : std::string("----");
-    std::string flightno = this->flight->flightno.length() > 0 ?
-      this->flight->flightno : std::string("----");
-
-    this->line1 = this->FormatString(dep_airport, dest_airport);
-    this->line2 = this->FormatString("", flightno);
-
-    this->Draw();
-  }
-
-  void HandleSK(int key) {
-    switch(key) {
-    case LSK1:
-      this->flight->dep_airport = this->input;
-      this->input.clear();
-      break;
-    case RSK1:
-      this->flight->dest_airport = this->input;
-      this->input.clear();
-      break;
-    case RSK2:
-      this->flight->flightno = this->input;
-      this->input.clear();
-      break;
-    }
-  }
-  
+  InitPage(Flight* flight);
+  void Update();
+  void HandleSK(int key);  
 };
 
 #endif

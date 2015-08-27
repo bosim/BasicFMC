@@ -19,14 +19,11 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
+#include <stdexcept>
 
 #include "Flight.h"
 
-float	color_green[] = { 0.0, 1.0, 0.0 };
+const float color_green[] = { 0.0, 1.0, 0.0 };
 
 const int LSK1 = 1;
 const int LSK2 = 2;
@@ -44,80 +41,23 @@ const int RSK6 = 12;
 class Page {
 
  public:
-  Page(Flight* flight) {
-    this->flight = flight;
-  }
-
-  void SetCoordinates(float* left, float* top) {
-    this->left = left;
-    this->top = top;
-  };
-
-  void DrawString(float x, float y, std::string& str) {
-    char* c_string = (char*) str.c_str();
-    XPLMDrawString(color_green, x, y, c_string, NULL, xplmFont_Basic);
-  }
-
-  std::string FormatString(std::string left, std::string right) {
-    std::stringstream ss;
-
-    std::transform(left.begin(), left.end(), left.begin(), ::toupper);
-    std::transform(right.begin(), right.end(), right.begin(), ::toupper);
-    
-    ss << std::setw(17) << std::left << left;
-    ss << std::setw(17) << std::right << right;
-
-    return ss.str();
-  }
+  Page(Flight* flight);
   
-  void Draw() {
-    float x;
-    float y;
-
-    x = *this->left;
-    y = *this->top;
-
-    this->DrawString(x+70, y-40, this->heading);
-
-    this->DrawString(x+70, y-65, this->line1_h);
-    this->DrawString(x+70, y-80, this->line1);
-
-    this->DrawString(x+70, y-95, this->line2_h);
-    this->DrawString(x+70, y-110, this->line2);
-
-    this->DrawString(x+70, y-125, this->line3_h);
-    this->DrawString(x+70, y-140, this->line3);
-
-    this->DrawString(x+70, y-155, this->line4_h);
-    this->DrawString(x+70, y-170, this->line4);
-
-    this->DrawString(x+70, y-185, this->line5_h);
-    this->DrawString(x+70, y-200, this->line5);
-
-    this->DrawString(x+70, y-215, this->line6_h);
-    this->DrawString(x+70, y-230, this->line6);
-
-    this->DrawString(x+70, y-250, this->input);
-  }
-
+  void SetCoordinates(float* left, float* top);
+  void DrawString(float x, float y, std::string& str);
+  std::string FormatString(std::string left, std::string right);  
+  void Draw();
+  void HandleInput(char input_char);
+  void HandleDelete();
+  
   virtual void Update() {
     throw std::logic_error("Not implemented");
-  }
-
-  void HandleInput(char input_char) {
-    this->input += toupper(input_char);
   }
 
   virtual void HandleSK(const int key) {
     throw std::logic_error("Not implemented");
   }
   
-  void HandleDelete() {
-    if(this->input.length() > 0) {
-      this->input.pop_back();
-    }
-  }
-
  protected:
   Flight* flight;
 

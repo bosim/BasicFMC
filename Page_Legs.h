@@ -22,13 +22,6 @@
 class LegsPage : public Page {
 
  public:
-  LegsPage(Flight* flight) : Page(flight) {
-
-    this->heading = this->FormatString(std::string("Flightplan"), std::string("1/1"));
-  }
-
-  void Update() {
-    this->Draw();
-  }
-  
+  LegsPage(Flight* flight);
+  void Update();  
 };

@@ -16,13 +16,13 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-int CoordInRect(float x, float y, float l, float t, float r, float b);
+#include "Page_Legs.h"
 
-void FMCToggleHotKeyHandler(void * refCon);
-void FMCToggleKeyboardInputHandler(void * refCon);
+LegsPage::LegsPage(Flight* flight) : Page(flight) {
+  this->heading = this->FormatString(std::string("Flightplan"), std::string("1/1"));
+}
 
-void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon);
+void LegsPage::Update() {
+  this->Draw();
+}
 
-void FMCKeyCallback(XPLMWindowID inWindowID, char inKey, XPLMKeyFlags inFlags, char inVirtualKey, void * inRefcon, int losingFocus);
-
-int FMCMouseClickCallback(XPLMWindowID inWindowID, int x, int y, XPLMMouseStatus inMouse, void * inRefcon);

@@ -6,6 +6,11 @@ TARGET		:= BasicFMC
 
 SOURCES = \
         Bitmap.cpp \
+	Page.cpp \
+	Page_Init.cpp \
+	Page_Legs.cpp \
+	Pages.cpp \
+	InputHandler.cpp \
 	Main.cpp 
 
 LIBS = 
