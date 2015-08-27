@@ -160,6 +160,40 @@ void InputHandler(int &dX, int &dY) {
   else if(CoordInRect(dX, dY, 10, -71, 33, -87)) {
     page->HandleSK(LSK1);
   }
+  else if(CoordInRect(dX, dY, 10, -99, 33, -115)) {
+    page->HandleSK(LSK2);
+  }
+  else if(CoordInRect(dX, dY, 10, -127, 33, -143)) {
+    page->HandleSK(LSK3);
+  }
+  else if(CoordInRect(dX, dY, 10, -156, 33, -173)) {
+    page->HandleSK(LSK4);
+  }
+  else if(CoordInRect(dX, dY, 10, -183, 33, -200)) {
+    page->HandleSK(LSK5);
+  }
+  else if(CoordInRect(dX, dY, 10, -211, 33, -229)) {
+    page->HandleSK(LSK6);
+  }
+  else if(CoordInRect(dX, dY, 325, -71, 351, -87)) {
+    page->HandleSK(RSK1);
+  }
+  else if(CoordInRect(dX, dY, 325, -99, 351, -115)) {
+    page->HandleSK(RSK2);
+  }
+  else if(CoordInRect(dX, dY, 325, -127, 351, -143)) {
+    page->HandleSK(RSK3);
+  }
+  else if(CoordInRect(dX, dY, 325, -156, 351, -173)) {
+    page->HandleSK(RSK4);
+  }
+  else if(CoordInRect(dX, dY, 325, -183, 351, -200)) {
+    page->HandleSK(RSK5);
+  }
+  else if(CoordInRect(dX, dY, 325, -211, 351, -229)) {
+    page->HandleSK(RSK6);
+  }
+
 }
 
 #endif
