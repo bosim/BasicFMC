@@ -89,4 +89,6 @@ void LegsPage::HandleSK(int key) {
   } else {
     (*flightplan).push_back(result[0]);
   }
+
+  this->flight->SyncToXPFMC();
 }
