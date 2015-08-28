@@ -80,6 +80,7 @@ class Page {
   std::string line6;
 
   std::string input;
+  std::string error;
 };
 
 #endif

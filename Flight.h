@@ -19,13 +19,32 @@
 #ifndef FLIGHT_H
 #define FLIGHT_H
 
+#include "Navigation.h"
+
+#include <vector>
+
 class Flight {
 
  public:
-  std::string dep_airport;
-  std::string dest_airport;
+  NavAidInfo dep_airport;
+  NavAidInfo dest_airport;
   std::string flightno;
+  std::vector<NavAidInfo> flightplan;
   
+  void SetDepAirport(std::string Airport) {
+    this->dep_airport = Navigation::FindAirport(Airport);
+  }
+  void SetDestAirport(std::string Airport) {
+    this->dest_airport = Navigation::FindAirport(Airport);
+  }
+  void SyncToXPFMC() {
+    for(int i=0; i < XPLMCountFMSEntries(); i++) {
+      XPLMClearFMSEntry(i);
+    }
+    for(unsigned int i=0; i < this->flightplan.size(); i++) {
+      
+    }
+  }
 };
 
 #endif

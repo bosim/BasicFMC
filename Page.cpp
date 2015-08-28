@@ -82,15 +82,21 @@ void Page::Draw() {
   this->DrawString(x+70, y-215, this->line6_h);
   this->DrawString(x+70, y-230, this->line6);
   
-  this->DrawString(x+70, y-250, this->input);
+  this->DrawString(x+70, y-250,
+                   this->error.length() > 0 ? this->error : this->input);
 }
 
 void Page::HandleInput(char input_char) {
-  this->input += toupper(input_char);
+  if(this->error.length() == 0) {
+    this->input += toupper(input_char);
+  }
 }
 
 void Page::HandleDelete() {
-  if(this->input.length() > 0) {
+  if(this->error.length() > 0) {
+    this->error.clear();
+  }
+  else if(this->input.length() > 0) {
     this->input.pop_back();
   }
 }

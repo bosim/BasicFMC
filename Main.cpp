@@ -258,12 +258,12 @@ void FMCToggleHotKeyHandler(void * refCon) {
 void FMCToggleKeyboardInputHandler(void * refCon) {
   FMCKeyboardInput = !FMCKeyboardInput;
 
-  if(FMCKeyboardInput) {
+  /*if(FMCKeyboardInput) {
     XPLMTakeKeyboardFocus(FMCWindow);
   }
   else {
     XPLMTakeKeyboardFocus(0);    
-  }
+    }*/
 }
 
 int CoordInRect(float x, float y, float l, float t, float r, float b) {

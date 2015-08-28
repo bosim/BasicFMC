@@ -26,10 +26,10 @@ InitPage::InitPage(Flight* flight) : Page(flight) {
 }
 
 void InitPage::Update() {
-  std::string dep_airport = this->flight->dep_airport.length() > 0 ?
-    this->flight->dep_airport : std::string("----");
-  std::string dest_airport = this->flight->dest_airport.length() > 0 ?
-    this->flight->dest_airport : std::string("----");
+  std::string dep_airport = this->flight->dep_airport.type > 0 ?
+    this->flight->dep_airport.id : std::string("----");
+  std::string dest_airport = this->flight->dest_airport.type > 0 ?
+    this->flight->dest_airport.id : std::string("----");
   std::string flightno = this->flight->flightno.length() > 0 ?
     this->flight->flightno : std::string("----");
   
@@ -42,11 +42,21 @@ void InitPage::Update() {
 void InitPage::HandleSK(int key) {
     switch(key) {
     case LSK1:
-      this->flight->dep_airport = this->input;
+      try {
+        this->flight->SetDepAirport(this->input);
+      }
+      catch(NavAidNotFoundException e) {
+        this->error = e.what();
+      }
       this->input.clear();
       break;
     case RSK1:
-      this->flight->dest_airport = this->input;
+      try {
+        this->flight->SetDestAirport(this->input);
+      }
+      catch(NavAidNotFoundException e) {
+        this->error = e.what();
+      }
       this->input.clear();
       break;
     case RSK2:

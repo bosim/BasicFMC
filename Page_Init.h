@@ -29,7 +29,7 @@ class InitPage : public Page {
  public:
   InitPage(Flight* flight);
   void Update();
-  void HandleSK(int key);  
+  void HandleSK(int key);
 };
 
 #endif
