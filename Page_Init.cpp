@@ -20,9 +20,12 @@
 
 InitPage::InitPage(Flight* flight) : Page(flight) {
 
-  this->heading = this->FormatString(std::string("Init"), std::string("1/1"));
-  this->line1_h = this->FormatString("Dep Airport", "Dest Airport");
-  this->line2_h = this->FormatString("", "Flight No");
+  this->heading = this->FormatString(std::string("Init"),
+                                     std::string("1/1"));
+  this->line1_h = this->FormatString(std::string("Dep Airport"),
+                                     std::string("Dest Airport"));
+  this->line2_h = this->FormatString(std::string(""),
+                                     std::string("Flight No"));
 }
 
 void InitPage::Update() {

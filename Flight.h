@@ -37,12 +37,13 @@ class Flight {
   void SetDestAirport(std::string Airport) {
     this->dest_airport = Navigation::FindAirport(Airport);
   }
+
   void SyncToXPFMC() {
     for(int i=0; i < XPLMCountFMSEntries(); i++) {
       XPLMClearFMSEntry(i);
     }
     for(unsigned int i=0; i < this->flightplan.size(); i++) {
-      
+      XPLMSetFMSEntryInfo(i, this->flightplan[i].ref, 0);
     }
   }
 };

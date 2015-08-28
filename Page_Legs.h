@@ -23,5 +23,8 @@ class LegsPage : public Page {
 
  public:
   LegsPage(Flight* flight);
-  void Update();  
+  void Update();
+  void HandleSK(int key);
+ private:
+  unsigned int offset;
 };
