@@ -27,6 +27,23 @@
 #include "Page.h"
 #include "InputHandler.h"
 
+extern Pages* pages;
+extern Flight* flight;
+extern XPLMWindowID FMCWindow;
+extern bool FMCKeyboardInput;
+
+void ToggleKeyboard() {
+  
+  FMCKeyboardInput = !FMCKeyboardInput;
+
+  if(FMCKeyboardInput) {
+    XPLMTakeKeyboardFocus(FMCWindow);
+  }
+  else {
+    XPLMTakeKeyboardFocus(0);    
+  }
+}
+
 void InputHandler(int &dX, int &dY) {
   Page* page = pages->CurrentPage();
   
@@ -203,5 +220,8 @@ void InputHandler(int &dX, int &dY) {
   }
   else if(CoordInRect(dX, dY, 95, -379, 128, -403)) {
     page->HandleSK(BUTTON_DOWN);
+  }
+  else if(CoordInRect(dX, dY, 0, -26, 27, -55)) {
+    ToggleKeyboard();
   }
 }

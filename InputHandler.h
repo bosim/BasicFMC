@@ -19,9 +19,7 @@
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H
 
-extern Pages* pages;
-extern Flight* flight;
-
 void InputHandler(int &dX, int &dY);
+void ToggleKeyboard();
 
 #endif

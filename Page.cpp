@@ -29,6 +29,8 @@
 
 #include "Page.h"
 
+extern bool FMCKeyboardInput;
+
 Page::Page(Flight* flight) {
   this->flight = flight;
 }
@@ -113,5 +115,8 @@ bool Page::HandleDelete() {
 }
 
 std::string Page::GetStatus() {
-  return "";
+  if(FMCKeyboardInput) {
+    return std::string("KEY");
+  }
+  return std::string("");
 }

@@ -46,7 +46,6 @@
 XPLMWindowID FMCWindow = NULL;
 
 XPLMHotKeyID FMCToggleHotKey = NULL;
-XPLMHotKeyID FMCToggleKeyboardInput = NULL;
 
 bool FMCDisplayWindow = false;
 bool FMCKeyboardInput = false;
@@ -86,8 +85,6 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
 
   FMCToggleHotKey = XPLMRegisterHotKey(XPLM_VK_F8, xplm_DownFlag,
                                        "F8", FMCToggleHotKeyHandler, NULL);
-  FMCToggleKeyboardInput = XPLMRegisterHotKey(XPLM_VK_F9, xplm_DownFlag,
-                                       "F9", FMCToggleKeyboardInputHandler, NULL);
 
   LoadTextures();
 
@@ -255,16 +252,6 @@ void FMCToggleHotKeyHandler(void * refCon) {
   FMCDisplayWindow = !FMCDisplayWindow;
 }
 
-void FMCToggleKeyboardInputHandler(void * refCon) {
-  FMCKeyboardInput = !FMCKeyboardInput;
-
-  /*if(FMCKeyboardInput) {
-    XPLMTakeKeyboardFocus(FMCWindow);
-  }
-  else {
-    XPLMTakeKeyboardFocus(0);    
-    }*/
-}
 
 int CoordInRect(float x, float y, float l, float t, float r, float b) {
   return ((x >= l) && (x < r) && (y < t) && (y >= b));
