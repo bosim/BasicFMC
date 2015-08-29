@@ -156,12 +156,6 @@ void InputHandler(int &dX, int &dY) {
   else if(CoordInRect(dX, dY, 114, -521, 146, -547)) {
     page->HandleInput('/');
   }
-  else if(CoordInRect(dX, dY, 186, -271, 222, -296)) {
-    pages->SwitchPage("init");
-  }
-  else if(CoordInRect(dX, dY, 47, -307, 83, -333)) {
-    pages->SwitchPage("legs");
-  }
   else if(CoordInRect(dX, dY, 10, -71, 33, -87)) {
     page->HandleSK(LSK1);
   }
@@ -198,5 +192,16 @@ void InputHandler(int &dX, int &dY) {
   else if(CoordInRect(dX, dY, 325, -211, 351, -229)) {
     page->HandleSK(RSK6);
   }
-
+  else if(CoordInRect(dX, dY, 186, -271, 222, -296)) {
+    pages->SwitchPage("init");
+  }
+  else if(CoordInRect(dX, dY, 47, -307, 83, -333)) {
+    pages->SwitchPage("legs");
+  }
+  else if(CoordInRect(dX, dY, 95, -344, 128, -369)) {
+    page->HandleSK(BUTTON_UP);
+  }
+  else if(CoordInRect(dX, dY, 95, -379, 128, -403)) {
+    page->HandleSK(BUTTON_DOWN);
+  }
 }

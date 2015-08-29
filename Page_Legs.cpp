@@ -19,40 +19,34 @@
 #include "Page_Legs.h"
 
 LegsPage::LegsPage(Flight* flight) : Page(flight) {
-  this->heading = this->FormatString(std::string("Flightplan"),
-                                     std::string("1/1"));
   this->offset = 0;
+}
+
+void LegsPage::PrintLine(unsigned int offset, std::string* line,
+                         std::vector<NavAidInfo>* flightplan) {
+  if(offset < (*flightplan).size()) {
+    (*line) = this->FormatString((*flightplan)[offset].id,
+                                 "--- / ----");
+  } else {
+    (*line).clear();
+  }
+  
 }
 
 void LegsPage::Update() {
   std::vector<NavAidInfo>* flightplan;
-
+  
   flightplan = &this->flight->flightplan;
 
-  if(this->offset < (*flightplan).size()) {
-    this->line1 = this->FormatString((*flightplan)[offset].id,
-                                     "--- / ----");
-  }
-  if(this->offset + 1 < (*flightplan).size()) {
-    this->line2 = this->FormatString((*flightplan)[offset+1].id,
-                                     "--- / ----");
-  }
-  if(this->offset + 2 < (*flightplan).size()) {
-    this->line3 = this->FormatString((*flightplan)[offset+2].id,
-                                     "--- / ----");
-  }
-  if(this->offset + 3 < (*flightplan).size()) {
-    this->line4 = this->FormatString((*flightplan)[offset+3].id,
-                                     "--- / ----");
-  }
-  if(this->offset + 4 < (*flightplan).size()) {
-    this->line5 = this->FormatString((*flightplan)[offset+4].id,
-                                     "--- / ----");
-  }
-  if(this->offset + 5 < (*flightplan).size()) {
-    this->line6 = this->FormatString((*flightplan)[offset+5].id,
-                                     "--- / ----");
-  }
+  this->heading = this->FormatString(std::string("Flightplan"),
+                                     std::string("1/1"));
+  
+  this->PrintLine(this->offset, &this->line1, flightplan);
+  this->PrintLine(this->offset + 1, &this->line2, flightplan);
+  this->PrintLine(this->offset + 2, &this->line3, flightplan);
+  this->PrintLine(this->offset + 3, &this->line4, flightplan);
+  this->PrintLine(this->offset + 4, &this->line5, flightplan);
+  this->PrintLine(this->offset + 5, &this->line6, flightplan);
   
   this->Draw();
 }
@@ -62,6 +56,20 @@ void LegsPage::HandleSK(int key) {
   std::vector<NavAidInfo>* flightplan;
 
   flightplan = &this->flight->flightplan;
+
+  switch(key) {
+  case BUTTON_UP:
+    if(this->offset > 0) {
+      offset--;
+    }
+    return;
+  case BUTTON_DOWN:
+    if(this->offset + 1 < (*flightplan).size()) {
+      offset++;
+    }
+    return;
+  }
+  
 
   std::vector<NavAidInfo> result;
   Navigation::FindNavAid(this->input, result);

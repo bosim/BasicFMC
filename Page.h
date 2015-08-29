@@ -38,6 +38,9 @@ const int RSK4 = 10;
 const int RSK5 = 11;
 const int RSK6 = 12;
 
+const int BUTTON_UP = 20;
+const int BUTTON_DOWN = 21;
+
 class Page {
 
  public:

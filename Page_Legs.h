@@ -23,6 +23,8 @@ class LegsPage : public Page {
 
  public:
   LegsPage(Flight* flight);
+  void PrintLine(unsigned int offset, std::string* line,
+                 std::vector<NavAidInfo>* flightplan);
   void Update();
   void HandleSK(int key);
  private:
