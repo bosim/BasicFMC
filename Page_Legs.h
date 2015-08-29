@@ -39,6 +39,7 @@ class LegsPage : public Page {
   bool LegsHandleDelete();
   void NavaidUpdate();
   void NavaidHandleSK(int key);
+  bool NavaidHandleDelete();
  private:
   unsigned int offset;
   unsigned int navaid_offset;

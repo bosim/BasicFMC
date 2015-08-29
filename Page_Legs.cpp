@@ -243,6 +243,12 @@ void LegsPage::HandleSK(int key) {
   }
 }
 
+bool LegsPage::NavaidHandleDelete() {
+  /* Delete will cancel */
+  this->mode = MODE_LEGS;
+  return true;
+}
+
 bool LegsPage::LegsHandleDelete() {
   bool action = Page::HandleDelete();
   if(!action) {
@@ -255,6 +261,9 @@ bool LegsPage::HandleDelete() {
   switch(this->mode) {
   case MODE_LEGS:
     return LegsHandleDelete();
+    break;
+  case MODE_NAVAID:
+    return NavaidHandleDelete();
     break;
   }
 
