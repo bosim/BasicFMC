@@ -51,8 +51,10 @@ class Page {
   std::string FormatString(std::string left, std::string right);  
   void Draw();
   void HandleInput(char input_char);
+
   virtual bool HandleDelete();
   virtual std::string GetStatus();
+
   virtual void Update() {
     throw std::logic_error("Not implemented");
   }

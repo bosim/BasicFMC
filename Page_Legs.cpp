@@ -24,20 +24,34 @@
 LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->offset = 0;
   this->delete_mode = false;
+  this->mode = MODE_LEGS;
 }
 
 void LegsPage::PrintLine(unsigned int offset, std::string* line,
-                         std::vector<NavAidInfo>* flightplan) {
+                         std::vector<NavAidInfo>* flightplan,
+                         bool coordinates=false) {
+
+  std::stringstream ss;
+  std::string right_column;
+
+  if(coordinates) {
+    ss << (*flightplan)[offset].lat << " , " << (*flightplan)[offset].lon;
+    right_column = ss.str();
+  }
+  else {
+    right_column = "--- / ----";
+  }
+
   if(offset < (*flightplan).size()) {
     (*line) = this->FormatString((*flightplan)[offset].id,
-                                 "--- / ----");
+                                 right_column);
   } else {
     (*line).clear();
   }
   
 }
 
-void LegsPage::Update() {
+void LegsPage::LegsUpdate() {
   std::vector<NavAidInfo>* flightplan;
   
   flightplan = &this->flight->flightplan;
@@ -62,7 +76,46 @@ void LegsPage::Update() {
   this->Draw();
 }
 
-void LegsPage::HandleSK(int key) {
+void LegsPage::NavaidUpdate() {
+  std::vector<NavAidInfo>* navaids;
+  
+  navaids = &this->navaids;
+
+  unsigned int current_page = ceil(float(this->offset) / 6) + 1;
+  unsigned int total_pages = ceil(float((*navaids).size()) / 6) + 1;
+
+  std::stringstream ss;
+
+  ss << current_page << "/" << total_pages;
+  
+  this->heading = this->FormatString(std::string("Flightplan"),
+                                     ss.str());
+  
+  this->PrintLine(this->offset, &this->line1, navaids, true);
+  this->PrintLine(this->offset + 1, &this->line2, navaids, true);
+  this->PrintLine(this->offset + 2, &this->line3, navaids, true);
+  this->PrintLine(this->offset + 3, &this->line4, navaids, true);
+  this->PrintLine(this->offset + 4, &this->line5, navaids, true);
+  this->PrintLine(this->offset + 5, &this->line6, navaids, true);
+  
+  this->Draw();
+
+}
+
+void LegsPage::Update() {
+  switch(this->mode) {
+  case MODE_LEGS:
+    LegsUpdate();
+    break;
+  case MODE_NAVAID:
+    NavaidUpdate();
+    break;
+  default:
+    throw std::logic_error("Mode has wrong value!");
+  }
+}
+
+void LegsPage::LegsHandleSK(int key) {
   int index;
   std::vector<NavAidInfo>* flightplan;
 
@@ -80,13 +133,18 @@ void LegsPage::HandleSK(int key) {
     }
     return;
   }
-  
 
-  std::vector<NavAidInfo> result;
-  Navigation::FindNavAid(this->input, result);
+  this->navaids.clear();
 
-  if(result.size() == 0) {
+  Navigation::FindNavAid(this->input, this->navaids);
+
+  if(this->navaids.size() == 0) {
     this->error = "Navaid could not be found";
+    return;
+  }
+
+  if(this->navaids.size() > 1) {
+    this->mode = MODE_NAVAID;
     return;
   }
   
@@ -106,9 +164,9 @@ void LegsPage::HandleSK(int key) {
   if(!this->delete_mode) {
     if(operation_index + 1 <= (*flightplan).size()) {
       (*flightplan).insert((*flightplan).begin() + operation_index + 1,
-                           result[0]);
+                           navaids[0]);
     } else {
-      (*flightplan).push_back(result[0]);
+      (*flightplan).push_back(navaids[0]);
     }
 
     this->input.clear();
@@ -124,11 +182,29 @@ void LegsPage::HandleSK(int key) {
   this->flight->SyncToXPFMC();
 }
 
-bool LegsPage::HandleDelete() {
+void LegsPage::HandleSK(int key) {
+  switch(this->mode) {
+  case MODE_LEGS:
+    LegsHandleSK(key);
+    break;
+  }
+}
+
+bool LegsPage::LegsHandleDelete() {
   bool action = Page::HandleDelete();
   if(!action) {
     this->delete_mode = !this->delete_mode;
   }
+  return true;
+}
+
+bool LegsPage::HandleDelete() {
+  switch(this->mode) {
+  case MODE_LEGS:
+    return LegsHandleDelete();
+    break;
+  }
+
   return true;
 }
 

@@ -23,6 +23,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <cstring>
 
 #include <vector>
 
@@ -89,17 +90,18 @@ class Navigation {
     char id[32];
     char name[256];
 
-    for(XPLMNavRef ref = XPLMFindNavAid(NULL, NavAid.c_str(), NULL,
-                                        NULL, NULL,
-                                        xplm_Nav_Airport | xplm_Nav_NDB |
-                                        xplm_Nav_VOR | xplm_Nav_Fix);
+    for(XPLMNavRef ref = XPLMGetFirstNavAid();
         ref != XPLM_NAV_NOT_FOUND;
         ref = XPLMGetNextNavAid(ref)) {
 
       XPLMGetNavAidInfo(ref, &type, &lat, &lon, &height,
                         &freq, &heading, id, name, NULL);
 
-      Result.push_back(NavAidInfo(ref, type, lat, lon, height, freq, heading, id, name));      
+      if(!strcmp(id, NavAid.c_str())) {
+        Result.push_back(NavAidInfo(ref, type, lat, lon, height, freq, heading, id, name));
+      }
+      XPLMDebugString(id);
+      XPLMDebugString("\n");
     }
   }
 };

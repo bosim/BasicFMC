@@ -136,8 +136,6 @@ void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon) {
   float PanelLeft, PanelRight, PanelBottom, PanelTop;
 
   if (FMCDisplayWindow) {
-    XPLMBringWindowToFront(FMCWindow);
-
     XPLMGetWindowGeometry(FMCWindow, &PanelWindowLeft,
                           &PanelWindowTop, &PanelWindowRight,
                           &PanelWindowBottom);
@@ -186,6 +184,10 @@ void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon) {
 
 void FMCKeyCallback(XPLMWindowID inWindowID, char inKey, XPLMKeyFlags inFlags, char inVirtualKey, void * inRefcon, int losingFocus) {
 
+  if(!FMCKeyboardInput) {
+    return;
+  }
+  
   Page* page = pages->CurrentPage();
 
   // accept key event if key is pressed down or held down (from X-Ivap)

@@ -19,17 +19,28 @@
 #include "Page.h"
 #include "Flight.h"
 
+const int MODE_LEGS = 0;
+const int MODE_NAVAID = 1;
+
 class LegsPage : public Page {
 
  public:
   LegsPage(Flight* flight);
   void PrintLine(unsigned int offset, std::string* line,
-                 std::vector<NavAidInfo>* flightplan);
+                 std::vector<NavAidInfo>* flightplan,
+                 bool coordinates);
   void Update();
   void HandleSK(int key);
   bool HandleDelete();
   std::string GetStatus();
+ protected:
+  void LegsHandleSK(int key);
+  void LegsUpdate();
+  bool LegsHandleDelete();
+  void NavaidUpdate();
  private:
   unsigned int offset;
   bool delete_mode;
+  int mode;
+  std::vector<NavAidInfo> navaids;
 };

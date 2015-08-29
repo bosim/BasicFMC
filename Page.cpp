@@ -115,8 +115,18 @@ bool Page::HandleDelete() {
 }
 
 std::string Page::GetStatus() {
-  if(FMCKeyboardInput) {
-    return std::string("KEY");
+  std::string status;
+
+  if(this->error.length() > 0) {
+    status = "ERR";
   }
-  return std::string("");
+  if(FMCKeyboardInput) {
+    if(status.length() > 0) {
+      status += ",KEY";
+    }
+    else {
+      status = "KEY";
+    }
+  }
+  return status;
 }

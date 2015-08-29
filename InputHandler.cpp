@@ -37,6 +37,7 @@ void ToggleKeyboard() {
   FMCKeyboardInput = !FMCKeyboardInput;
 
   if(FMCKeyboardInput) {
+    XPLMBringWindowToFront(FMCWindow);
     XPLMTakeKeyboardFocus(FMCWindow);
   }
   else {

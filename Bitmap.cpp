@@ -154,7 +154,6 @@ void SwapEndian(int *Data){}
 void SwapRedBlue(IMAGEDATA *ImageData)
 {
 	unsigned char  * srcPixel;
-	int 	count;
 	int		x,y;
 	unsigned char sTemp;
 
@@ -164,7 +163,6 @@ void SwapRedBlue(IMAGEDATA *ImageData)
 
 	/// Do the swap
 	srcPixel = ImageData->pData;
-	count = ImageData->Width * ImageData->Height;
 	for (y = 0; y < ImageData->Height; ++y)
 		for (x = 0; x < ImageData->Width; ++x)
 		{
