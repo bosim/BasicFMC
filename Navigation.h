@@ -100,8 +100,6 @@ class Navigation {
       if(!strcmp(id, NavAid.c_str())) {
         Result.push_back(NavAidInfo(ref, type, lat, lon, height, freq, heading, id, name));
       }
-      XPLMDebugString(id);
-      XPLMDebugString("\n");
     }
   }
 };

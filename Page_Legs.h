@@ -38,8 +38,11 @@ class LegsPage : public Page {
   void LegsUpdate();
   bool LegsHandleDelete();
   void NavaidUpdate();
+  void NavaidHandleSK(int key);
  private:
   unsigned int offset;
+  unsigned int navaid_offset;
+  unsigned int operation_index;
   bool delete_mode;
   int mode;
   std::vector<NavAidInfo> navaids;

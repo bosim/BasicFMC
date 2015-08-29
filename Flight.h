@@ -45,6 +45,9 @@ class Flight {
     for(unsigned int i=0; i < this->flightplan.size(); i++) {
       XPLMSetFMSEntryInfo(i, this->flightplan[i].ref, 0);
     }
+
+    XPLMSetDestinationFMSEntry(0);
+    XPLMSetDisplayedFMSEntry(0);
   }
 };
 

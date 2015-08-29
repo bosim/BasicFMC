@@ -81,22 +81,22 @@ void LegsPage::NavaidUpdate() {
   
   navaids = &this->navaids;
 
-  unsigned int current_page = ceil(float(this->offset) / 6) + 1;
+  unsigned int current_page = ceil(float(this->navaid_offset) / 6) + 1;
   unsigned int total_pages = ceil(float((*navaids).size()) / 6) + 1;
 
   std::stringstream ss;
 
   ss << current_page << "/" << total_pages;
   
-  this->heading = this->FormatString(std::string("Flightplan"),
+  this->heading = this->FormatString(std::string("Select navaid"),
                                      ss.str());
   
-  this->PrintLine(this->offset, &this->line1, navaids, true);
-  this->PrintLine(this->offset + 1, &this->line2, navaids, true);
-  this->PrintLine(this->offset + 2, &this->line3, navaids, true);
-  this->PrintLine(this->offset + 3, &this->line4, navaids, true);
-  this->PrintLine(this->offset + 4, &this->line5, navaids, true);
-  this->PrintLine(this->offset + 5, &this->line6, navaids, true);
+  this->PrintLine(this->navaid_offset, &this->line1, navaids, true);
+  this->PrintLine(this->navaid_offset + 1, &this->line2, navaids, true);
+  this->PrintLine(this->navaid_offset + 2, &this->line3, navaids, true);
+  this->PrintLine(this->navaid_offset + 3, &this->line4, navaids, true);
+  this->PrintLine(this->navaid_offset + 4, &this->line5, navaids, true);
+  this->PrintLine(this->navaid_offset + 5, &this->line6, navaids, true);
   
   this->Draw();
 
@@ -120,7 +120,7 @@ void LegsPage::LegsHandleSK(int key) {
   std::vector<NavAidInfo>* flightplan;
 
   flightplan = &this->flight->flightplan;
-
+  
   switch(key) {
   case BUTTON_UP:
     if(this->offset > 0) {
@@ -134,20 +134,22 @@ void LegsPage::LegsHandleSK(int key) {
     return;
   }
 
-  this->navaids.clear();
+  if(!this->delete_mode) {
+    /* Clear navaids storage to ensure consistency */
+    this->navaids.clear();
+    Navigation::FindNavAid(this->input, this->navaids);
 
-  Navigation::FindNavAid(this->input, this->navaids);
+    if(this->navaids.size() == 0) {
+      this->error = "Navaid could not be found";
+      return;
+    }
 
-  if(this->navaids.size() == 0) {
-    this->error = "Navaid could not be found";
-    return;
+    if(this->navaids.size() > 1) {
+      this->mode = MODE_NAVAID;
+      return;
+    }
   }
 
-  if(this->navaids.size() > 1) {
-    this->mode = MODE_NAVAID;
-    return;
-  }
-  
   switch(key) {
   case LSK1: index = 0; break;
   case LSK2: index = 1; break;
@@ -160,13 +162,16 @@ void LegsPage::LegsHandleSK(int key) {
   }
 
   unsigned int operation_index = this->offset + index;
+  /* Used to remember where to insert in case multiple waypoints
+     are found */
+  this->operation_index = this->offset + index;
 
   if(!this->delete_mode) {
     if(operation_index + 1 <= (*flightplan).size()) {
       (*flightplan).insert((*flightplan).begin() + operation_index + 1,
-                           navaids[0]);
+                           this->navaids[0]);
     } else {
-      (*flightplan).push_back(navaids[0]);
+      (*flightplan).push_back(this->navaids[0]);
     }
 
     this->input.clear();
@@ -182,10 +187,58 @@ void LegsPage::LegsHandleSK(int key) {
   this->flight->SyncToXPFMC();
 }
 
+void LegsPage::NavaidHandleSK(int key) {
+  int index;
+
+  switch(key) {
+  case BUTTON_UP:
+    if(this->navaid_offset > 0) {
+      navaid_offset--;
+    }
+    return;
+  case BUTTON_DOWN:
+    if(this->navaid_offset + 1 < this->navaids.size()) {
+      navaid_offset++;
+    }
+    return;
+  }
+
+  switch(key) {
+  case LSK1: index = 0; break;
+  case LSK2: index = 1; break;
+  case LSK3: index = 2; break;
+  case LSK4: index = 3; break;
+  case LSK5: index = 4; break;
+  case LSK6: index = 5; break;
+  default:
+    return;
+  }
+
+  unsigned int navaid_index = this->navaid_offset + index;
+
+  std::vector<NavAidInfo>* flightplan = &this->flight->flightplan;
+
+  if(this->operation_index + 1 <= (*flightplan).size()) {
+    (*flightplan).insert((*flightplan).begin() + this->operation_index + 1,
+                         navaids[navaid_index]);
+  } else {
+    (*flightplan).push_back(navaids[navaid_index]);
+  }
+
+  this->input.clear();
+  this->flight->SyncToXPFMC();
+
+  /* Let us change mode to LEGS when the waypoint was successfully added */
+  this->mode = MODE_LEGS;
+}
+
 void LegsPage::HandleSK(int key) {
   switch(this->mode) {
   case MODE_LEGS:
     LegsHandleSK(key);
+    break;
+  case MODE_NAVAID:
+    NavaidHandleSK(key);
     break;
   }
 }
