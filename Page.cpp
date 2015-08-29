@@ -81,9 +81,16 @@ void Page::Draw() {
   
   this->DrawString(x+70, y-215, this->line6_h);
   this->DrawString(x+70, y-230, this->line6);
+
+  std::string end_line;
+  if(this->error.length() > 0) {
+    end_line = this->error;
+  }
+  else {
+    end_line = this->FormatString(this->input, this->GetStatus());
+  }
   
-  this->DrawString(x+70, y-250,
-                   this->error.length() > 0 ? this->error : this->input);
+  this->DrawString(x+70, y-250, end_line);
 }
 
 void Page::HandleInput(char input_char) {
@@ -92,11 +99,19 @@ void Page::HandleInput(char input_char) {
   }
 }
 
-void Page::HandleDelete() {
+bool Page::HandleDelete() {
   if(this->error.length() > 0) {
     this->error.clear();
+    return true;
   }
   else if(this->input.length() > 0) {
     this->input.pop_back();
+    return true;
   }
+
+  return false;
+}
+
+std::string Page::GetStatus() {
+  return "";
 }

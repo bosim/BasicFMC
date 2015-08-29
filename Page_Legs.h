@@ -27,6 +27,9 @@ class LegsPage : public Page {
                  std::vector<NavAidInfo>* flightplan);
   void Update();
   void HandleSK(int key);
+  bool HandleDelete();
+  std::string GetStatus();
  private:
   unsigned int offset;
+  bool delete_mode;
 };

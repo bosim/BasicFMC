@@ -23,6 +23,7 @@
 
 LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->offset = 0;
+  this->delete_mode = false;
 }
 
 void LegsPage::PrintLine(unsigned int offset, std::string* line,
@@ -100,15 +101,46 @@ void LegsPage::HandleSK(int key) {
     return;
   }
 
-  unsigned int insert_index = this->offset + index + 1;
-  if(insert_index <= (*flightplan).size()) {
-    (*flightplan).insert((*flightplan).begin() + insert_index,
-                         result[0]);
-  } else {
-    (*flightplan).push_back(result[0]);
+  unsigned int operation_index = this->offset + index;
+
+  if(!this->delete_mode) {
+    if(operation_index + 1 <= (*flightplan).size()) {
+      (*flightplan).insert((*flightplan).begin() + operation_index + 1,
+                           result[0]);
+    } else {
+      (*flightplan).push_back(result[0]);
+    }
+
+    this->input.clear();
+  }
+  else {
+    if(operation_index < (*flightplan).size()) {
+      (*flightplan).erase((*flightplan).begin() + operation_index);
+    }
+
+    this->delete_mode = false;
   }
 
-  this->input.clear();
-  
   this->flight->SyncToXPFMC();
+}
+
+bool LegsPage::HandleDelete() {
+  bool action = Page::HandleDelete();
+  if(!action) {
+    this->delete_mode = !this->delete_mode;
+  }
+  return true;
+}
+
+std::string LegsPage::GetStatus() {
+  std::string status = Page::GetStatus();
+  if(this->delete_mode) {
+    if(status.length() > 0) {
+      status += ", DEL";
+    }
+    else {
+      status = "DEL";
+    }
+  }
+  return status;
 }
