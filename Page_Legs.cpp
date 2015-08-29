@@ -18,6 +18,9 @@
 
 #include "Page_Legs.h"
 
+#include <cmath>
+#include <sstream>
+
 LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->offset = 0;
 }
@@ -38,8 +41,15 @@ void LegsPage::Update() {
   
   flightplan = &this->flight->flightplan;
 
+  unsigned int current_page = ceil(float(this->offset) / 6) + 1;
+  unsigned int total_pages = ceil(float((*flightplan).size()) / 6) + 1;
+
+  std::stringstream ss;
+
+  ss << current_page << "/" << total_pages;
+  
   this->heading = this->FormatString(std::string("Flightplan"),
-                                     std::string("1/1"));
+                                     ss.str());
   
   this->PrintLine(this->offset, &this->line1, flightplan);
   this->PrintLine(this->offset + 1, &this->line2, flightplan);
@@ -98,5 +108,7 @@ void LegsPage::HandleSK(int key) {
     (*flightplan).push_back(result[0]);
   }
 
+  this->input.clear();
+  
   this->flight->SyncToXPFMC();
 }
