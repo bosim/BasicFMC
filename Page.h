@@ -45,6 +45,8 @@ class Page {
 
  public:
   Page(Flight* flight);
+  virtual ~Page() {
+  }
   
   void SetCoordinates(float* left, float* top);
   void DrawString(float x, float y, std::string& str);
