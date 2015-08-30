@@ -16,7 +16,10 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string>
+
 int CoordInRect(float x, float y, float l, float t, float r, float b);
+std::string GetPluginDir();
 
 void FMCToggleHotKeyHandler(void * refCon);
 void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon);

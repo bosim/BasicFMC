@@ -33,6 +33,7 @@
 #include "XPLMDataAccess.h"
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
+#include "XPLMPlugin.h"
 
 #include "Bitmap.h"
 #include "Pages.h"
@@ -50,24 +51,28 @@ XPLMHotKeyID FMCToggleHotKey = NULL;
 bool FMCDisplayWindow = false;
 bool FMCKeyboardInput = false;
 
-char PluginDir[255];
 XPLMTextureID Texture[MAX_TEXTURES];
 
 Pages* pages;
 Flight* flight;
 
-PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
+std::string GetPluginDir() {
+  char buf[256];
+  std::string PluginDir;
 
 #if IBM
-  const char* DirectoryName = "Resources\\Plugins\\BS-FMC\\";
-#elif LIN
-  const char* DirectoryName = "Resources/plugins/BS-FMC/";
+  std::string DirectoryName = "Resources\\Plugins\\BS-FMC\\";
 #else
-  const char* DirectoryName = "Resources:Plugins:BS-FMC:";
+  std::string DirectoryName = "Resources/plugins/BS-FMC/";
 #endif
+  
+  XPLMGetSystemPath(buf);
+  PluginDir = std::string(buf) + DirectoryName;
+  return PluginDir;
+}
 
-  XPLMGetSystemPath(PluginDir);
-  strcat(PluginDir, DirectoryName);
+PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
+  XPLMEnableFeature("XPLM_USE_NATIVE_PATHS",1);
 
   strcpy(outName, "BasicFMC");
   strcpy(outSig, "BasicFMC");

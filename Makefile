@@ -11,7 +11,7 @@ SOURCES = \
 	Page_Legs.cpp \
 	Pages.cpp \
 	InputHandler.cpp \
-	Main.cpp 
+	Main.cpp
 
 LIBS = 
 
@@ -19,7 +19,7 @@ INCLUDES = \
 	-I$(SRC_BASE)/SDK/CHeaders/XPLM \
 	-I$(SRC_BASE)/SDK/CHeaders/Widgets
 
-DEFINES = -DAPL=0 -DIBM=0 -DLIN=1
+DEFINES = -DAPL=0 -DIBM=0 -DLIN=1 -DXPLM200
 
 VPATH = $(SRC_BASE)
 CSOURCES	:= $(filter %.c, $(SOURCES))

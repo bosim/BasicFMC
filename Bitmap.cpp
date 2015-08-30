@@ -33,51 +33,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
 
-#include "Bitmap.h"
-
 #include "XPLMDefs.h"
 #include "XPLMDisplay.h"
 #include "XPLMDataAccess.h"
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
 
+#include "Bitmap.h"
+#include "Main.h"
+
 extern XPLMTextureID Texture[MAX_TEXTURES];
-extern char PluginDir[255];
 
 /// Loads all our textures
 void LoadTextures(void) {
-	if (!LoadGLTexture(FMC_FILENAME, FMC_TEXTURE))
-		XPLMDebugString("Panel texture failed to load\n");
+  if (!LoadGLTexture(std::string("fmc.bmp"), 0))
+    XPLMDebugString("Panel texture failed to load\n");
 }
 
 /// Loads one texture
-int LoadGLTexture(char *pFileName, int TextureId)
+int LoadGLTexture(std::string FileName, int TextureId)
 {
   int Status=FALSE;
-  char TextureFileName[255];
-#if APL && __MACH__
-  char TextureFileName2[255];
-  int Result = 0;
-#endif
-
-  /// Need to get the actual texture path
-  /// and append the filename to it.
-  strcpy(TextureFileName, PluginDir);
-  strcat(TextureFileName, pFileName);
-  
-#if APL && __MACH__
-  Result = ConvertPath(TextureFileName, TextureFileName2, sizeof(TextureFileName));
-  if (Result == 0)
-    strcpy(TextureFileName, TextureFileName2);
-  else
-    XPLMDebugString("ExampleGauge - Unable to convert path\n");
-#endif
+  std::string TextureFileName = GetPluginDir() + FileName;
 
   void *pImageData = 0;
   int sWidth, sHeight;
   IMAGEDATA sImageData;
   /// Get the bitmap from the file
-  if (BitmapLoader(TextureFileName, &sImageData)) {
+  if (BitmapLoader(TextureFileName.c_str(), &sImageData)) {
     Status=TRUE;
 
     SwapRedBlue(&sImageData);
@@ -97,25 +80,6 @@ int LoadGLTexture(char *pFileName, int TextureId)
   
   return Status;
 }
-
-
-
-#if APL && __MACH__
-#include <Carbon/Carbon.h>
-int ConvertPath(const char * inPath, char * outPath, int outPathMaxLen) {
-  CFStringRef inStr = CFStringCreateWithCString(kCFAllocatorDefault, inPath ,kCFStringEncodingMacRoman);
-  if (inStr == NULL)
-    return -1;
-  CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, inStr, kCFURLHFSPathStyle,0);
-  CFStringRef outStr = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-  if (!CFStringGetCString(outStr, outPath, outPathMaxLen, kCFURLPOSIXPathStyle))
-    return -1;
-  CFRelease(outStr);
-  CFRelease(url);
-  CFRelease(inStr);
-  return 0;
-}
-#endif
 
 
 /// Cross Platform Bitmap functions - Sandy Barbour 2003
