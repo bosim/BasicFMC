@@ -156,22 +156,21 @@ void LegsPage::LegsHandleSK(int key) {
 
   unsigned int operation_index = this->offset + index;
 
-  if(!this->delete_mode) {
+  if(!this->delete_mode && this->input.find("/") != std::string::npos) {
+    std::string::size_type pos = this->input.find("/");
+    std::string source;
+    if(operation_index < (*flightplan).size()) {
+      source = (*flightplan)[operation_index].id;
+    } else {
+      source = (*flightplan)[(*flightplan).size()-1].id; 
+    }
+    std::string airway = this->input.substr(0, pos);
+    std::string dest = this->input.substr(pos+1);
+  }
+  else if(!this->delete_mode) {
     /* Clear navaids storage to ensure consistency */
     this->navaids.clear();
 
-    std::string::size_type pos = this->input.find("/");
-    if(pos != std::string::npos) {
-      std::string source;
-      if(operation_index < (*flightplan).size()) {
-        source = (*flightplan)[operation_index].id;
-      } else {
-        source = (*flightplan)[(*flightplan).size()-1].id; 
-      }
-      std::string airway = this->input.substr(0, pos);
-      std::string dest = this->input.substr(pos+1);
-      
-    }
     
     Navigation::FindNavAid(this->input, this->navaids);
 
@@ -220,15 +219,24 @@ void LegsPage::NavaidHandleSK(int key) {
       navaid_offset++;
     }
     return;
-  }
-
-  switch(key) {
-  case LSK1: index = 0; break;
-  case LSK2: index = 1; break;
-  case LSK3: index = 2; break;
-  case LSK4: index = 3; break;
-  case LSK5: index = 4; break;
-  case LSK6: index = 5; break;
+  case LSK1:
+    index = 0;
+    break;
+  case LSK2:
+    index = 1;
+    break;
+  case LSK3:
+    index = 2;
+    break;
+  case LSK4:
+    index = 3;
+    break;
+  case LSK5:
+    index = 4;
+    break;
+  case LSK6:
+    index = 5;
+    break;
   default:
     return;
   }
