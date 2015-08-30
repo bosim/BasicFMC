@@ -11,6 +11,7 @@ SOURCES = \
 	Page_Legs.cpp \
 	Pages.cpp \
 	InputHandler.cpp \
+	Utils.cpp \
 	Main.cpp
 
 LIBS = 

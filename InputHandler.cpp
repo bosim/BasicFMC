@@ -22,7 +22,7 @@
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
 
-#include "Main.h"
+#include "Utils.h"
 #include "Pages.h"
 #include "Page.h"
 #include "InputHandler.h"

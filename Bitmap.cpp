@@ -40,7 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "XPLMUtilities.h"
 
 #include "Bitmap.h"
-#include "Main.h"
+#include "Utils.h"
 
 extern XPLMTextureID Texture[MAX_TEXTURES];
 

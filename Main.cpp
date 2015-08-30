@@ -43,6 +43,7 @@
 #include "Flight.h"
 #include "Main.h"
 #include "InputHandler.h"
+#include "Utils.h"
 
 XPLMWindowID FMCWindow = NULL;
 
@@ -56,20 +57,6 @@ XPLMTextureID Texture[MAX_TEXTURES];
 Pages* pages;
 Flight* flight;
 
-std::string GetPluginDir() {
-  char buf[256];
-  std::string PluginDir;
-
-#if IBM
-  std::string DirectoryName = "Resources\\Plugins\\BS-FMC\\";
-#else
-  std::string DirectoryName = "Resources/plugins/BS-FMC/";
-#endif
-  
-  XPLMGetSystemPath(buf);
-  PluginDir = std::string(buf) + DirectoryName;
-  return PluginDir;
-}
 
 PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
   XPLMEnableFeature("XPLM_USE_NATIVE_PATHS",1);
@@ -260,9 +247,6 @@ void FMCToggleHotKeyHandler(void * refCon) {
 }
 
 
-int CoordInRect(float x, float y, float l, float t, float r, float b) {
-  return ((x >= l) && (x < r) && (y < t) && (y >= b));
-}
 
 
 

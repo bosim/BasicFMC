@@ -16,9 +16,14 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <string>
 
-void FMCToggleHotKeyHandler(void * refCon);
-void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon);
-void FMCKeyCallback(XPLMWindowID inWindowID, char inKey, XPLMKeyFlags inFlags, char inVirtualKey, void * inRefcon, int losingFocus);
-int FMCMouseClickCallback(XPLMWindowID inWindowID, int x, int y, XPLMMouseStatus inMouse, void * inRefcon);
+std::string GetPluginDir();
+std::string GetAirwayFilename();
+int CoordInRect(float x, float y, float l, float t, float r, float b);
+
+#endif
