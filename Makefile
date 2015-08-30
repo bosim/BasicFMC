@@ -20,7 +20,7 @@ INCLUDES = \
 	-I$(SRC_BASE)/SDK/CHeaders/XPLM \
 	-I$(SRC_BASE)/SDK/CHeaders/Widgets
 
-DEFINES = -DAPL=0 -DIBM=0 -DLIN=1 -DXPLM200
+DEFINES = -DAPL=0 -DIBM=0 -DLIN=1 -DXPLM200 -ggdb
 
 VPATH = $(SRC_BASE)
 CSOURCES	:= $(filter %.c, $(SOURCES))

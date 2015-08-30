@@ -46,7 +46,6 @@
 #include "Utils.h"
 
 XPLMWindowID FMCWindow = NULL;
-
 XPLMHotKeyID FMCToggleHotKey = NULL;
 
 bool FMCDisplayWindow = false;
