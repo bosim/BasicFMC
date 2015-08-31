@@ -25,6 +25,7 @@ LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->offset = 0;
   this->delete_mode = false;
   this->mode = MODE_LEGS;
+  this->airway_reader = AirwayReader(GetAirwayFilename()); 
 }
 
 void LegsPage::PrintLine(unsigned int offset, std::string* line,
@@ -166,12 +167,31 @@ void LegsPage::LegsHandleSK(int key) {
     }
     std::string airway = this->input.substr(0, pos);
     std::string dest = this->input.substr(pos+1);
+
+    std::vector<NavAidInfo> waypoints;
+    this->airway_reader.FindSegment(airway, source, dest, waypoints);
+
+    if(waypoints.size() == 0) {
+      this->error = "Airway not found";
+      return;
+    }
+
+    if(operation_index + 1 <= (*flightplan).size()) {
+      for(size_t i=waypoints.size()-1; i > 0; i--) {
+        (*flightplan).insert((*flightplan).begin() + operation_index + 1,
+                             waypoints[i]);
+      }
+    } else {
+      for(size_t i=1; i < waypoints.size(); i++) {
+        (*flightplan).push_back(waypoints[i]);
+      }
+    }
+    
   }
   else if(!this->delete_mode) {
     /* Clear navaids storage to ensure consistency */
     this->navaids.clear();
 
-    
     Navigation::FindNavAid(this->input, this->navaids);
 
     if(this->navaids.size() == 0) {

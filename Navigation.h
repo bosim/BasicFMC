@@ -82,6 +82,26 @@ class Navigation {
     return NavAidInfo(ref, type, lat, lon, height, freq, heading, id, name);
   }
 
+  static NavAidInfo FindNavAidIdLonLat(std::string NavAid, float lon, float lat) {
+    /* Temp variables */
+    int type, freq;
+    float height, heading;
+    char id[32];
+    char name[256];
+
+    XPLMNavRef ref = XPLMFindNavAid(NULL, NavAid.c_str(), &lat, &lon, NULL,
+                                    xplm_Nav_NDB | xplm_Nav_VOR | xplm_Nav_Fix);
+
+    if(ref == XPLM_NAV_NOT_FOUND) {
+      throw NavAidNotFoundException("Navaid not found");      
+    }
+
+    XPLMGetNavAidInfo(ref, &type, &lat, &lon, &height,
+                      &freq, &heading, id, name, NULL);
+
+    return NavAidInfo(ref, type, lat, lon, height, freq, heading, id, name);
+  }
+  
   static void FindNavAid(std::string NavAid, std::vector<NavAidInfo>& Result) {
 
     /* Temp variables */

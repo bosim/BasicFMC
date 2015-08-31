@@ -18,6 +18,8 @@
 
 #include "Page.h"
 #include "Flight.h"
+#include "Utils.h"
+#include "AirwayReader.h"
 
 const int MODE_LEGS = 0;
 const int MODE_NAVAID = 1;
@@ -47,4 +49,5 @@ class LegsPage : public Page {
   bool delete_mode;
   int mode;
   std::vector<NavAidInfo> navaids;
+  AirwayReader airway_reader;
 };

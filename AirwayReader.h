@@ -60,10 +60,10 @@ public:
 
 class AirwayReader {
 public:
-  AirwayReader(std::string Filename) : Filename(Filename) {
-  }
+  AirwayReader() : Filename("") {}
+  AirwayReader(std::string Filename) : Filename(Filename) {}
 
-  void FindSegment(std::string airway, std::string source, std::string dest, std::vector<AirwaySegment>& result) {
+  void FindSegment(std::string airway, std::string source, std::string dest, std::vector<NavAidInfo>& result) {
     std::ifstream filehandle(this->Filename.c_str());
     std::string line;
     std::vector<AirwaySegment> temp_result;
@@ -87,8 +87,8 @@ public:
         if(tokens.size() != 10)
           continue;
         
-        AirwaySegment segment = AirwaySegment(tokens[0], atof(tokens[1].c_str()), atof(tokens[2].c_str()),
-                                              tokens[3], atof(tokens[4].c_str()), atof(tokens[5].c_str()),
+        AirwaySegment segment = AirwaySegment(tokens[0], atof(tokens[2].c_str()), atof(tokens[1].c_str()),
+                                              tokens[3], atof(tokens[5].c_str()), atof(tokens[4].c_str()),
                                               tokens[6] == "1" ? true : false, atoi(tokens[7].c_str()),
                                               atoi(tokens[8].c_str()), tokens[9]);
         if(segment.name == airway) {
@@ -98,7 +98,7 @@ public:
     }
 
     std::vector<std::pair<std::string, int> > paths;
-    for(int i=0; i < temp_result.size(); ++i) {
+    for(size_t i=0; i < temp_result.size(); ++i) {
       if(temp_result[i].source == source) {
         paths.push_back(std::pair<std::string, int>(temp_result[i].dest, i));
       }
@@ -107,7 +107,7 @@ public:
       }
     }
 
-    for(int i=0; i < paths.size(); ++i) {
+    for(size_t i=0; i < paths.size(); ++i) {
       std::vector<AirwaySegment> found_result;
       std::string tmp = paths[i].first;
       found_result.push_back(temp_result[paths[i].second]);
@@ -116,7 +116,7 @@ public:
       bool found = true;
       while(found) {
         found = false;
-        for(int j=0; j < temp_result.size(); j++) {
+        for(size_t j=0; j < temp_result.size(); j++) {
           if(temp_result[j].source == tmp && visited.find(temp_result[j].dest) == visited.end()) {
             visited.insert(tmp);
             tmp = temp_result[j].dest;
@@ -132,7 +132,7 @@ public:
         }
       }
 
-      int q;
+      size_t q;
 
       for(q=0; q < found_result.size(); q++) {
         if((q == 0 && found_result[q].source != source) ||
@@ -146,10 +146,20 @@ public:
         }
       }
 
+      NavAidInfo navaid;
       if(q < found_result.size()) {
-        result.resize(q+1);
-        std::copy(found_result.begin(), found_result.begin() + q + 1, result.begin());
-        return;
+        for(size_t z = 0; z < q + 1; z++) {
+          if(z == q) {
+            navaid = Navigation::FindNavAidIdLonLat(found_result[z].source, found_result[z].source_lon, found_result[z].source_lat);
+            result.push_back(navaid);            
+            navaid = Navigation::FindNavAidIdLonLat(found_result[z].dest, found_result[z].dest_lon, found_result[z].dest_lat);
+            result.push_back(navaid);
+          }
+          else {
+            navaid = Navigation::FindNavAidIdLonLat(found_result[z].source, found_result[z].source_lon, found_result[z].source_lat);
+            result.push_back(navaid);
+          }
+        }
       }
     }
   }
@@ -158,10 +168,6 @@ private:
   std::string Filename;
 };
 
-int main() {
-  AirwayReader a("X-Plane 10/Resources/default data/earth_awy.dat");
-  std::vector<AirwaySegment> result;
-}
 
 #endif
 
