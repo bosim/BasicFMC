@@ -21,9 +21,12 @@
 #define UTILS_H
 
 #include <string>
+#include <vector>
 
 std::string GetPluginDir();
 std::string GetAirwayFilename();
+std::string GetProcedureFilename(std::string Airport, bool star=false);
 int CoordInRect(float x, float y, float l, float t, float r, float b);
+void SplitLine(std::string s, std::vector<std::string>& l, char delim, size_t times = 0);
 
 #endif

@@ -9,6 +9,7 @@ SOURCES = \
 	Page.cpp \
 	Page_Init.cpp \
 	Page_Legs.cpp \
+	Page_Airport.cpp \
 	Pages.cpp \
 	InputHandler.cpp \
 	Utils.cpp \

@@ -164,7 +164,6 @@ public:
     }
   }
 private:
-  std::vector<AirwaySegment> segments;
   std::string Filename;
 };
 

@@ -16,22 +16,35 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PAGE_INIT_H
-#define PAGE_INIT_H
+#include "Page_Airport.h"
 
-#include <string>
+AirportPage::AirportPage(Flight* flight) : Page(flight), mode(MODE_OVERVIEW) {
+}
 
-#include "Page.h"
-#include "Flight.h"
+void AirportPage::Update() {
+  this->heading = this->FormatString(std::string("Airport"),
+                                     std::string("1/1"));
 
-class InitPage : public Page {
+  if(this->mode == MODE_OVERVIEW) {
+    
+    this->line1_h = this->FormatString(this->flight->dep_airport.id,
+                                     std::string("DEP >"));
+    this->line2_h = this->FormatString(this->flight->dest_airport.id,
+                                     std::string("ARR >"));
+  }
+  else {
 
- public:
-  InitPage(Flight* flight);
-  void Update();
-  void HandleSK(int key);
- private:
-  ProcedureReader procedure_reader;
-};
+  }
+  this->Draw();
+}
 
-#endif
+void AirportPage::HandleSK(int key) {
+  switch(key) {
+  case RSK1:
+    this->sid = true;
+    break;
+  case RSK2:
+    this->sid = false;
+    break;
+  }
+}

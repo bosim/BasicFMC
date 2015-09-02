@@ -40,6 +40,7 @@
 #include "Page.h"
 #include "Page_Init.h"
 #include "Page_Legs.h"
+#include "Page_Airport.h"
 #include "Flight.h"
 #include "Main.h"
 #include "InputHandler.h"
@@ -89,6 +90,9 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
 
   page = new LegsPage(flight);
   pages->RegisterPage("legs", page);
+
+  page = new AirportPage(flight);
+  pages->RegisterPage("airport", page);
 
   pages->SwitchPage("init");
   

@@ -186,7 +186,7 @@ void LegsPage::LegsHandleSK(int key) {
         (*flightplan).push_back(waypoints[i]);
       }
     }
-    
+    this->input.clear();
   }
   else if(!this->delete_mode) {
     /* Clear navaids storage to ensure consistency */

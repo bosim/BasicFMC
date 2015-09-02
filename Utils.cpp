@@ -53,6 +53,58 @@ std::string GetAirwayFilename() {
   return AwyFile;
 }
 
+std::string GetProcedureFilename(std::string Airport, bool star) {
+#if IBM
+  std::string DirectoryName = "FD_FMC\\" + Airport + "\\";
+#else
+  std::string DirectoryName = "FD_FMC/" + Airport + "/";
+#endif
+  
+  std::string PluginDir = GetPluginDir();
+  std::string ProcedureFilename = PluginDir + DirectoryName;
+  ProcedureFilename += star ? "STAR_data.csv" : "SID_data.csv";
+  return ProcedureFilename;
+}
+
 int CoordInRect(float x, float y, float l, float t, float r, float b) {
   return ((x >= l) && (x < r) && (y < t) && (y >= b));
+}
+
+void SplitLine(std::string s, std::vector<std::string>& l, char delim, size_t times) {
+  std::string::size_type i = 0;
+  std::string::size_type last = 0;
+  
+  bool ignore = false;
+
+  while(i < s.size()) {
+    if(s[i] == '"') {
+
+      if(!ignore) {
+	ignore = true;
+	last = i + 1;
+      }
+      else {
+        std::string new_str = s.substr(last, i-last);
+	l.push_back(new_str);
+	last = i + 2;
+	i += 2;
+	ignore = false;
+      }
+    }
+    else if(s[i] == delim && !ignore) {
+      std::string new_str = s.substr(last, i - last);
+      l.push_back(new_str);
+      last = i+1;
+    }
+
+    ++i;
+    
+    if(times > 0 && l.size() >= times) {
+      break;
+    } 
+  }
+  if(s.size() - last > 0) {
+    std::string new_str = s.substr(last, s.size() - last);
+    l.push_back(new_str);
+  }
 }

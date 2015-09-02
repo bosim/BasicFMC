@@ -17,6 +17,7 @@
  */
 
 #include "Page_Init.h"
+#include "Utils.h"
 
 InitPage::InitPage(Flight* flight) : Page(flight) {
 
@@ -47,6 +48,8 @@ void InitPage::HandleSK(int key) {
     case LSK1:
       try {
         this->flight->SetDepAirport(this->input);
+        this->flight->sids.clear();
+        this->procedure_reader.ReadSidFile(GetProcedureFilename(this->input), this->flight->sids);
       }
       catch(NavAidNotFoundException e) {
         this->error = e.what();
@@ -56,6 +59,8 @@ void InitPage::HandleSK(int key) {
     case RSK1:
       try {
         this->flight->SetDestAirport(this->input);
+        this->flight->stars.clear();
+        this->procedure_reader.ReadStarFile(GetProcedureFilename(this->input, true), this->flight->stars);
       }
       catch(NavAidNotFoundException e) {
         this->error = e.what();

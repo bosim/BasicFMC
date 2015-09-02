@@ -16,22 +16,26 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PAGE_INIT_H
-#define PAGE_INIT_H
+#ifndef PAGE_AIRPORT_H
+#define PAGE_AIRPORT_H
 
 #include <string>
 
 #include "Page.h"
 #include "Flight.h"
 
-class InitPage : public Page {
+const int MODE_OVERVIEW = 1;
+const int MODE_DEPARR = 2;
+
+class AirportPage : public Page {
 
  public:
-  InitPage(Flight* flight);
+  AirportPage(Flight* flight);
   void Update();
   void HandleSK(int key);
  private:
-  ProcedureReader procedure_reader;
+  int mode;
+  bool sid;
 };
 
 #endif

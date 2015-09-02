@@ -20,8 +20,10 @@
 #define FLIGHT_H
 
 #include "Navigation.h"
+#include "ProcedureReader.h"
 
 #include <vector>
+#include <set>
 
 class Flight {
 
@@ -30,6 +32,10 @@ class Flight {
   NavAidInfo dest_airport;
   std::string flightno;
   std::vector<NavAidInfo> flightplan;
+  std::vector<Procedure> sids;
+  std::set<std::string> sids_runways;
+  std::vector<Procedure> stars;
+  std::set<std::string> stars_runways;
   
   void SetDepAirport(std::string Airport) {
     this->dep_airport = Navigation::FindAirport(Airport);
