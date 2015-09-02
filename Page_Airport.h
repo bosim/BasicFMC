@@ -31,11 +31,22 @@ class AirportPage : public Page {
 
  public:
   AirportPage(Flight* flight);
+  void PrintLine(unsigned int offset, std::string* line, std::vector<std::string>* runways, std::vector<std::string>* procedures);
+  void DepArrUpdate();
+  void DepArrHandleSK(int key);
+  void OverviewUpdate();
+  void OverviewHandleSK(int key);
   void Update();
   void HandleSK(int key);
+  bool HandleDelete();
  private:
   int mode;
   bool sid;
+  unsigned int offset;
+  unsigned int selected_runway;
+  std::vector<std::string>* runways;
+  std::vector<Procedure>* procedures;
+  std::vector<std::string> procedures_index;
 };
 
 #endif

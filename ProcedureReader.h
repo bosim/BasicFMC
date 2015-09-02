@@ -125,7 +125,7 @@ public:
     }
   }
 
-  std::set<std::string> GetRunways(std::vector<Procedure>& procedures) {
+  void GetRunways(std::vector<Procedure>& procedures, std::vector<std::string>& result) {
     std::set<std::string> set;
 
     for(size_t i=0; i < procedures.size(); i++) {
@@ -134,7 +134,9 @@ public:
       }
     }
 
-    return set;
+    for(auto it = set.begin(); it != set.end(); ++it) {
+      result.push_back(*it);
+    }
   }
 };
 

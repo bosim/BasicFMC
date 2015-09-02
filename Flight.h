@@ -23,7 +23,6 @@
 #include "ProcedureReader.h"
 
 #include <vector>
-#include <set>
 
 class Flight {
 
@@ -33,9 +32,9 @@ class Flight {
   std::string flightno;
   std::vector<NavAidInfo> flightplan;
   std::vector<Procedure> sids;
-  std::set<std::string> sids_runways;
+  std::vector<std::string> sids_runways;
   std::vector<Procedure> stars;
-  std::set<std::string> stars_runways;
+  std::vector<std::string> stars_runways;
   
   void SetDepAirport(std::string Airport) {
     this->dep_airport = Navigation::FindAirport(Airport);
