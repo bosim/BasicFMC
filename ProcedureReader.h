@@ -87,7 +87,6 @@ public:
             procedure.waypoints.push_back(waypoint);
           }
           procedures.push_back(procedure);
-          procedure.dump();
         }
       }
     }
@@ -119,7 +118,6 @@ public:
             procedure.waypoints.push_back(waypoint);
           }
           procedures.push_back(procedure);
-          procedure.dump();
         }
       }
     }

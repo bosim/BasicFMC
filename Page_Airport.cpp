@@ -62,7 +62,7 @@ void AirportPage::PrintLine(unsigned int offset, std::string* line, std::vector<
 
 void AirportPage::DepArrUpdate() {
   std::vector<std::string>* runways = this->runways;
-  std::vector<std::string>* procedures = &this->procedures_index;
+  std::vector<std::string>* procedures = &this->procedures_labels;
   
   this->PrintLine(this->offset, &this->line1, runways, procedures);
   this->PrintLine(this->offset + 1, &this->line2, runways, procedures);
@@ -81,7 +81,7 @@ void AirportPage::OverviewHandleSK(int key) {
     this->sid = true;
     this->runways = &this->flight->sids_runways;
     this->procedures = &this->flight->sids;
-    this->procedures_index.clear();
+    this->procedures_labels.clear();
     this->selected_runway = -1;
     this->mode = MODE_DEPARR;
     break;
@@ -89,7 +89,7 @@ void AirportPage::OverviewHandleSK(int key) {
     this->sid = false;
     this->runways = &this->flight->stars_runways;
     this->procedures = &this->flight->stars;
-    this->procedures_index.clear();
+    this->procedures_labels.clear();
     this->selected_runway = -1;
     this->mode = MODE_DEPARR;
     break;
@@ -98,6 +98,7 @@ void AirportPage::OverviewHandleSK(int key) {
 
 void AirportPage::DepArrHandleSK(int key) {
   int runway_index = -1;
+  int procedure_index = -1;
   
   switch(key) {
   case BUTTON_UP:
@@ -107,7 +108,7 @@ void AirportPage::DepArrHandleSK(int key) {
     return;
   case BUTTON_DOWN:
     if(this->offset + 1 < std::max((*this->runways).size(),
-                                   this->procedures_index.size())) {
+                                   this->procedures_labels.size())) {
       offset++;
     }
     return;
@@ -129,12 +130,90 @@ void AirportPage::DepArrHandleSK(int key) {
   case LSK6:
     runway_index = 5;
     break;
+  case RSK1:
+    procedure_index = 0;
+    break;
+  case RSK2:
+    procedure_index = 1;
+    break;
+  case RSK3:
+    procedure_index = 2;
+    break;
+  case RSK4:
+    procedure_index = 3;
+    break;
+  case RSK5:
+    procedure_index = 4;
+    break;
+  case RSK6:
+    procedure_index = 5;
+    break;
   default:
     return;
   }
 
-  if(runway_index >= 0) {
-    procedures_index.clear();
+  if(this->selected_runway >= 0 && procedure_index >= 0) {
+    unsigned int selected_procedure = this->offset + procedure_index;
+    std::string procedure_label = this->procedures_labels[selected_procedure];
+    std::string runway = (*this->runways)[this->selected_runway];
+
+    Procedure* found_procedure = NULL;
+
+    for(size_t i=0; i < (*this->procedures).size(); i++) {
+      Procedure* procedure = &(*this->procedures)[i];
+      if(procedure->name == procedure_label && procedure->runway == runway) {
+        found_procedure = procedure;
+      }
+    }
+
+    if(found_procedure != NULL) {
+      (*found_procedure).dump();
+      for(size_t i=0; i < (*found_procedure).waypoints.size(); i++) {
+        ProcedureWaypoint waypoint = (*found_procedure).waypoints[i];
+        NavAidInfo navaid_info;
+        float lat, lon;
+        
+        if(waypoint.lon && waypoint.lat) {
+          lon = waypoint.lon;
+          lat = waypoint.lat;
+        }
+        else {
+          if(this->sid) {
+            lon = this->flight->dep_airport.lon;
+            lat = this->flight->dep_airport.lat;
+          }
+          else {
+            lon = this->flight->dest_airport.lon;
+            lat = this->flight->dest_airport.lat;
+          }
+        }
+
+        try {
+          navaid_info = Navigation::FindNavAidIdLonLat(waypoint.id, lon, lat);
+        }
+        catch(NavAidNotFoundException e) {
+          navaid_info = NavAidInfo();
+          navaid_info.ref = 0;
+          navaid_info.type = -1;
+          navaid_info.lat = waypoint.lat;
+          navaid_info.lon = waypoint.lon;
+          navaid_info.id = waypoint.id;
+          navaid_info.name = waypoint.id;
+        } 
+
+        if(navaid_info.lat && navaid_info.lon) {
+          if(this->sid) {
+            this->flight->flightplan.insert(this->flight->flightplan.begin() + i, navaid_info);
+          } else {
+            this->flight->flightplan.push_back(navaid_info);
+          }
+        }
+      }
+      this->flight->SyncToXPFMC();
+    }
+  }
+  else if(runway_index >= 0) {
+    procedures_labels.clear();
 
     this->selected_runway = this->offset + runway_index;
     std::string runway = (*this->runways)[this->selected_runway];
@@ -142,10 +221,11 @@ void AirportPage::DepArrHandleSK(int key) {
     for(size_t i=0; i < (*this->procedures).size(); i++) {
       Procedure* procedure = &(*this->procedures)[i];
       if(procedure->runway == runway) {
-        this->procedures_index.push_back(procedure->name);
+        this->procedures_labels.push_back(procedure->name);
       }
     }
   }
+
 }
 
 void AirportPage::Update() {

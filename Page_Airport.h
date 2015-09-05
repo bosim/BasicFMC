@@ -46,7 +46,7 @@ class AirportPage : public Page {
   unsigned int selected_runway;
   std::vector<std::string>* runways;
   std::vector<Procedure>* procedures;
-  std::vector<std::string> procedures_index;
+  std::vector<std::string> procedures_labels;
 };
 
 #endif
