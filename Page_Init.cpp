@@ -44,7 +44,7 @@ void InitPage::Update() {
 }
 
 void InitPage::HandleSK(int key) {
-    switch(key) {
+  switch(key) {
     case LSK1:
       try {
         this->flight->SetDepAirport(this->input);
@@ -75,5 +75,5 @@ void InitPage::HandleSK(int key) {
       this->flight->flightno = this->input;
       this->input.clear();
       break;
-    }
   }
+}

@@ -52,6 +52,7 @@ class NavAidInfo {
   int fmc_forced_altitude;
   bool fmc_star;
   bool fmc_sid;
+  float fmc_distance;
   
   NavAidInfo() : ref(0), type(0), lat(0.0), lon(0.0), height(0.0), freq(0),
     heading(0), id(""), name(""), fmc_forced_speed(0), fmc_forced_altitude(0),

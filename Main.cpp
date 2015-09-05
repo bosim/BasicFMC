@@ -42,6 +42,7 @@
 #include "Page_Init.h"
 #include "Page_Legs.h"
 #include "Page_Airport.h"
+#include "Page_Progress.h"
 #include "Flight.h"
 #include "Main.h"
 #include "InputHandler.h"
@@ -97,6 +98,9 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
   page = new AirportPage(flight);
   pages->RegisterPage("airport", page);
 
+  page = new ProgressPage(flight);
+  pages->RegisterPage("progress", page);
+  
   pages->SwitchPage("init");
   
   return 1;
@@ -274,6 +278,8 @@ float FMCLoopCallback(float inElapsedSinceLastCall, float inElapsedTimeSinceLast
     flight->SyncToXPFMC();
   }
 
+  flight->CalcDistances();
+  
   return 0.5;
 }
 

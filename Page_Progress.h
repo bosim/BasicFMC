@@ -16,20 +16,20 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef PAGE_PROGRESS_H
+#define PAGE_PROGRESS_H
 
 #include <string>
-#include <vector>
 
-#define pi 3.14159265358979323846
+#include "Page.h"
+#include "Flight.h"
 
-std::string GetPluginDir();
-std::string GetAirwayFilename();
-std::string GetProcedureFilename(std::string Airport, bool star=false);
-int CoordInRect(float x, float y, float l, float t, float r, float b);
-void SplitLine(std::string s, std::vector<std::string>& l, char delim, size_t times = 0);
-double distance(double lat1d, double lon1d, double lat2d, double lon2d);
+class ProgressPage : public Page {
+
+ public:
+  ProgressPage(Flight* flight);
+  void Update();
+  void HandleSK(int key);
+};
 
 #endif

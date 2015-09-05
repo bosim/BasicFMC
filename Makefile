@@ -10,6 +10,7 @@ SOURCES = \
 	Page_Init.cpp \
 	Page_Legs.cpp \
 	Page_Airport.cpp \
+	Page_Progress.cpp \
 	Pages.cpp \
 	InputHandler.cpp \
 	Utils.cpp \

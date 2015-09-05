@@ -16,6 +16,7 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cmath> 
 
 #include "XPLMDefs.h"
 #include "XPLMDataAccess.h"
@@ -107,4 +108,24 @@ void SplitLine(std::string s, std::vector<std::string>& l, char delim, size_t ti
     std::string new_str = s.substr(last, s.size() - last);
     l.push_back(new_str);
   }
+}
+
+static double toRad(double degrees) { return (pi * degrees) / 180.0; }
+static double toDeg(double radiant) { return (radiant * 180.0) / pi; }
+
+double distance(double lat1d, double lon1d, double lat2d, double lon2d) {
+  if (lat1d == lat2d && lon1d == lon2d) return 0.0;
+
+  double rad_lat1 = toRad(lat1d);
+  double rad_lon1 = toRad(lon1d);
+  double rad_lat2 = toRad(lat2d);
+  double rad_lon2 = toRad(lon2d);
+  
+  double sin_lat1 = sin(rad_lat1);
+  double sin_lat2 = sin(rad_lat2);
+  double cos_lat1 = cos(rad_lat1);
+  double cos_lat2 = cos(rad_lat2);
+  double lon1_min_lon2 = rad_lon1-rad_lon2;
+  
+  return toDeg(acos(sin_lat1*sin_lat2 + cos_lat1*cos_lat2*cos(lon1_min_lon2))) * 60.0;
 }

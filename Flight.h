@@ -61,6 +61,27 @@ class Flight {
     XPLMSetDestinationFMSEntry(1);
 
   }
+
+  void CalcDistances() {
+    XPLMDataRef lat_ref = XPLMFindDataRef("sim/flightmodel/position/latitude");
+    XPLMDataRef lon_ref = XPLMFindDataRef("sim/flightmodel/position/longitude");
+
+    float lat = XPLMGetDataf(lat_ref);
+    float lon = XPLMGetDataf(lon_ref);
+
+    for(size_t i=0; i < this->flightplan.size(); i++) {
+      if(i==0) {
+        this->flightplan[0].fmc_distance = distance(lat, lon, this->flightplan[0].lat, this->flightplan[0].lon);
+      }
+      else {
+        this->flightplan[i].fmc_distance = this->flightplan[i-1].fmc_distance;
+        this->flightplan[i].fmc_distance += distance(this->flightplan[i-1].lat,
+                                                    this->flightplan[i-1].lon,
+                                                    this->flightplan[i].lat,
+                                                    this->flightplan[i].lon);
+      }
+    }
+  }
 };
 
 #endif

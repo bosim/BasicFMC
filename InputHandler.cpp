@@ -218,7 +218,10 @@ void InputHandler(int &dX, int &dY) {
   }
   else if(CoordInRect(dX, dY, 47, -344, 83, -369)) {
     pages->SwitchPage("airport");
-  }  
+  }
+  else if(CoordInRect(dX, dY, 95, -271, 128, -296)) {
+    pages->SwitchPage("progress");
+  }
   else if(CoordInRect(dX, dY, 95, -344, 128, -369)) {
     page->HandleSK(BUTTON_UP);
   }

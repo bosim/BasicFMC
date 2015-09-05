@@ -40,7 +40,7 @@ void LegsPage::PrintLine(unsigned int offset, std::string* line,
       ss << (*flightplan)[offset].lat << " , " << (*flightplan)[offset].lon;
     }
     else {
-      ss.clear();
+      ss.str("");
 
       if((*flightplan)[offset].fmc_forced_speed) {
         ss << (*flightplan)[offset].fmc_forced_speed;
