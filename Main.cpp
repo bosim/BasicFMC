@@ -259,7 +259,6 @@ void FMCToggleHotKeyHandler(void * refCon) {
 
 float FMCLoopCallback(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void *inRefcon) {
   int destination = XPLMGetDestinationFMSEntry();
-  std::cout << destination << std::endl;
 
   XPLMDataRef lat_ref = XPLMFindDataRef("sim/flightmodel/position/latitude");
   XPLMDataRef lon_ref = XPLMFindDataRef("sim/flightmodel/position/longitude");
