@@ -34,6 +34,7 @@
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
 #include "XPLMPlugin.h"
+#include "XPLMProcessing.h"
 
 #include "Bitmap.h"
 #include "Pages.h"
@@ -78,6 +79,8 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
   FMCToggleHotKey = XPLMRegisterHotKey(XPLM_VK_F8, xplm_DownFlag,
                                        "F8", FMCToggleHotKeyHandler, NULL);
 
+  XPLMRegisterFlightLoopCallback(FMCLoopCallback, 1.0, NULL);
+  
   LoadTextures();
 
   flight = new Flight();
@@ -102,7 +105,8 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
 PLUGIN_API void	XPluginStop(void) {
   XPLMUnregisterHotKey(FMCToggleHotKey);
   XPLMDestroyWindow(FMCWindow);
-        
+  XPLMUnregisterFlightLoopCallback(FMCLoopCallback, NULL);
+
   /* Cleaning up */
   auto iter_pair = pages->PagesIterator();
   
@@ -249,7 +253,29 @@ void FMCToggleHotKeyHandler(void * refCon) {
   FMCDisplayWindow = !FMCDisplayWindow;
 }
 
+float FMCLoopCallback(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void *inRefcon) {
+  int destination = XPLMGetDestinationFMSEntry();
+  std::cout << destination << std::endl;
 
+  XPLMDataRef lat_ref = XPLMFindDataRef("sim/flightmodel/position/latitude");
+  XPLMDataRef lon_ref = XPLMFindDataRef("sim/flightmodel/position/longitude");
+
+  float lat = XPLMGetDataf(lat_ref);
+  float lon = XPLMGetDataf(lon_ref);
+
+  XPLMSetFMSEntryLatLon(0, lat, lon, 0);
+  
+  if(destination > 1) {
+    while(destination > 1 && flight->flightplan.size() > 0) {
+      flight->flightplan.erase(flight->flightplan.begin());
+      destination--;
+    }
+
+    flight->SyncToXPFMC();
+  }
+
+  return 0.5;
+}
 
 
 

@@ -22,6 +22,8 @@
 #include "Navigation.h"
 #include "ProcedureReader.h"
 
+#include "XPLMDataAccess.h"
+
 #include <vector>
 
 class Flight {
@@ -44,20 +46,20 @@ class Flight {
   }
 
   void SyncToXPFMC() {
-    for(int i=0; i < XPLMCountFMSEntries(); i++) {
+    for(int i=0; i < 100; i++) {
       XPLMClearFMSEntry(i);
     }
     for(unsigned int i=0; i < this->flightplan.size(); i++) {
       if(this->flightplan[i].type >= 0) {
-        XPLMSetFMSEntryInfo(i, this->flightplan[i].ref, 0);
+        XPLMSetFMSEntryInfo(i+1, this->flightplan[i].ref, 0);
       } else {
-        XPLMSetFMSEntryLatLon(i, this->flightplan[i].lat,
+        XPLMSetFMSEntryLatLon(i+1, this->flightplan[i].lat,
                               this->flightplan[i].lon, 0);
       }
     }
 
-    XPLMSetDestinationFMSEntry(0);
-    XPLMSetDisplayedFMSEntry(0);
+    XPLMSetDestinationFMSEntry(1);
+
   }
 };
 

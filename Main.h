@@ -22,3 +22,4 @@ void FMCToggleHotKeyHandler(void * refCon);
 void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon);
 void FMCKeyCallback(XPLMWindowID inWindowID, char inKey, XPLMKeyFlags inFlags, char inVirtualKey, void * inRefcon, int losingFocus);
 int FMCMouseClickCallback(XPLMWindowID inWindowID, int x, int y, XPLMMouseStatus inMouse, void * inRefcon);
+float FMCLoopCallback(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void *inRefcon);
