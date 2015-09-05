@@ -38,7 +38,6 @@ void LegsPage::PrintLine(unsigned int offset, std::string* line,
   if(offset < (*flightplan).size()) {
     if(coordinates) {
       ss << (*flightplan)[offset].lat << " , " << (*flightplan)[offset].lon;
-      right_column = ss.str();
     }
     else {
       ss.clear();
@@ -58,12 +57,11 @@ void LegsPage::PrintLine(unsigned int offset, std::string* line,
       else {
         ss << "-----";
       }
-      
-      right_column = ss.str();
-      
-      (*line) = this->FormatString((*flightplan)[offset].id,
-                                   right_column);
     }
+    right_column = ss.str();
+    (*line) = this->FormatString((*flightplan)[offset].id,
+                                 right_column);
+
   } else {
     (*line).clear();
   }
