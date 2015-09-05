@@ -167,17 +167,20 @@ void AirportPage::DepArrHandleSK(int key) {
     }
 
     if(found_procedure != NULL) {
-      (*found_procedure).dump();
+      int count = 0;
+      
       for(size_t i=0; i < (*found_procedure).waypoints.size(); i++) {
         ProcedureWaypoint waypoint = (*found_procedure).waypoints[i];
         NavAidInfo navaid_info;
         float lat, lon;
-        
+
+        /* IF procedure provides lat/lon, it is fine */
         if(waypoint.lon && waypoint.lat) {
           lon = waypoint.lon;
           lat = waypoint.lat;
         }
         else {
+          /* Otherwise we will use dep/dest airport to find the nearest waypoint in the database */
           if(this->sid) {
             lon = this->flight->dep_airport.lon;
             lat = this->flight->dep_airport.lat;
@@ -203,10 +206,16 @@ void AirportPage::DepArrHandleSK(int key) {
 
         if(navaid_info.lat && navaid_info.lon) {
           if(this->sid) {
-            this->flight->flightplan.insert(this->flight->flightplan.begin() + i, navaid_info);
+            this->flight->flightplan.insert(this->flight->flightplan.begin() + count, navaid_info);
+            count++;
           } else {
             this->flight->flightplan.push_back(navaid_info);
           }
+        }
+        else {
+          XPLMDebugString("Could not find ");
+          XPLMDebugString(navaid_info.id.c_str());
+          XPLMDebugString("\n");
         }
       }
       this->flight->SyncToXPFMC();

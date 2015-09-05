@@ -80,8 +80,8 @@ public:
             ProcedureWaypoint waypoint;
 
             waypoint.id = elements[i+4];
-            waypoint.lon = atof(elements[i+5].c_str());
-            waypoint.lat = atof(elements[i+6].c_str());
+            waypoint.lat = atof(elements[i+5].c_str());
+            waypoint.lon = atof(elements[i+6].c_str());
             waypoint.altitude = 0;
             waypoint.speed = 0;
             procedure.waypoints.push_back(waypoint);
@@ -111,8 +111,8 @@ public:
             ProcedureWaypoint waypoint;
 
             waypoint.id = elements[i+4];
-            waypoint.lon = atof(elements[i+5].c_str());
-            waypoint.lat = atof(elements[i+6].c_str());
+            waypoint.lat = atof(elements[i+5].c_str());
+            waypoint.lon = atof(elements[i+6].c_str());
             waypoint.altitude = atoi(elements[i+8].c_str());
             waypoint.speed = atoi(elements[i+9].c_str());
             procedure.waypoints.push_back(waypoint);

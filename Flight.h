@@ -51,7 +51,8 @@ class Flight {
       if(this->flightplan[i].type >= 0) {
         XPLMSetFMSEntryInfo(i, this->flightplan[i].ref, 0);
       } else {
-        XPLMSetFMSEntryLatLon(i, this->flightplan[i].lat, this->flightplan[i].lon, 0);
+        XPLMSetFMSEntryLatLon(i, this->flightplan[i].lat,
+                              this->flightplan[i].lon, 0);
       }
     }
 
