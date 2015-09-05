@@ -208,7 +208,8 @@ void AirportPage::DepArrHandleSK(int key) {
           lat = waypoint.lat;
         }
         else {
-          /* Otherwise we will use dep/dest airport to find the nearest waypoint in the database */
+          /* Otherwise we will use dep/dest airport to find the nearest 
+             waypoint in the database */
           if(this->sid) {
             lon = this->flight->dep_airport.lon;
             lat = this->flight->dep_airport.lat;
