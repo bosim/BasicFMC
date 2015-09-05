@@ -35,35 +35,35 @@ void LegsPage::PrintLine(unsigned int offset, std::string* line,
   std::stringstream ss;
   std::string right_column;
 
-  if(coordinates) {
-    ss << (*flightplan)[offset].lat << " , " << (*flightplan)[offset].lon;
-    right_column = ss.str();
-  }
-  else {
-    ss.clear();
-
-    if((*flightplan)[offset].fmc_forced_speed) {
-      ss << (*flightplan)[offset].fmc_forced_speed;
-    }
-    else {
-      ss << "---";
-    }
-
-    ss << " / ";
-    
-    if((*flightplan)[offset].fmc_forced_altitude) {
-      ss << (*flightplan)[offset].fmc_forced_altitude;
-    }
-    else {
-      ss << "-----";
-    }
-
-    right_column = ss.str();
-  }
-
   if(offset < (*flightplan).size()) {
-    (*line) = this->FormatString((*flightplan)[offset].id,
-                                 right_column);
+    if(coordinates) {
+      ss << (*flightplan)[offset].lat << " , " << (*flightplan)[offset].lon;
+      right_column = ss.str();
+    }
+    else {
+      ss.clear();
+
+      if((*flightplan)[offset].fmc_forced_speed) {
+        ss << (*flightplan)[offset].fmc_forced_speed;
+      }
+      else {
+        ss << "---";
+      }
+      
+      ss << " / ";
+      
+      if((*flightplan)[offset].fmc_forced_altitude) {
+        ss << (*flightplan)[offset].fmc_forced_altitude;
+      }
+      else {
+        ss << "-----";
+      }
+      
+      right_column = ss.str();
+      
+      (*line) = this->FormatString((*flightplan)[offset].id,
+                                   right_column);
+    }
   } else {
     (*line).clear();
   }

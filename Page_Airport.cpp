@@ -168,6 +168,34 @@ void AirportPage::DepArrHandleSK(int key) {
 
     if(found_procedure != NULL) {
       int count = 0;
+      int start = -1;
+      int end = -1;
+      
+      /* Clean existing procedures */
+      if(this->flight->flightplan.size() > 0) {
+        for(size_t i=0; i < this->flight->flightplan.size(); i++) {
+          if((this->sid && this->flight->flightplan[i].fmc_sid) ||
+             (!this->sid && this->flight->flightplan[i].fmc_star)) {
+          
+            start = i;
+            break;
+          }
+        }
+
+        for(size_t i=this->flight->flightplan.size() - 1; i >= 0; i--) {
+          if((this->sid && this->flight->flightplan[i].fmc_sid) ||
+             (!this->sid && this->flight->flightplan[i].fmc_star)) {
+            
+            end = i;
+            break;
+          }
+        }
+        
+        if(start >= 0 && end >= 0) {
+          this->flight->flightplan.erase(this->flight->flightplan.begin() + start,
+                                         this->flight->flightplan.begin() + end);
+        }
+      }
       
       for(size_t i=0; i < (*found_procedure).waypoints.size(); i++) {
         ProcedureWaypoint waypoint = (*found_procedure).waypoints[i];
