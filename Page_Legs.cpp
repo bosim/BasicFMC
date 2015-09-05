@@ -40,7 +40,25 @@ void LegsPage::PrintLine(unsigned int offset, std::string* line,
     right_column = ss.str();
   }
   else {
-    right_column = "--- / ----";
+    ss.clear();
+
+    if((*flightplan)[offset].fmc_forced_speed) {
+      ss << (*flightplan)[offset].fmc_forced_speed;
+    }
+    else {
+      ss << "---";
+    }
+
+    ss << " / ";
+    
+    if((*flightplan)[offset].fmc_forced_altitude) {
+      ss << (*flightplan)[offset].fmc_forced_altitude;
+    }
+    else {
+      ss << "-----";
+    }
+
+    right_column = ss.str();
   }
 
   if(offset < (*flightplan).size()) {

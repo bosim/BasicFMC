@@ -204,11 +204,21 @@ void AirportPage::DepArrHandleSK(int key) {
           navaid_info.name = waypoint.id;
         } 
 
+        if(waypoint.speed) {
+          navaid_info.fmc_forced_speed = waypoint.speed;
+        }
+
+        if(waypoint.altitude) {
+          navaid_info.fmc_forced_altitude = waypoint.altitude;
+        }
+
         if(navaid_info.lat && navaid_info.lon) {
           if(this->sid) {
+            navaid_info.fmc_sid = true;
             this->flight->flightplan.insert(this->flight->flightplan.begin() + count, navaid_info);
             count++;
           } else {
+            navaid_info.fmc_star = true;
             this->flight->flightplan.push_back(navaid_info);
           }
         }

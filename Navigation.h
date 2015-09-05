@@ -44,17 +44,25 @@ class NavAidInfo {
   float height;
   int freq;
   float heading;
-  std::string id; /* 32 */
-  std::string name /* 256 */;
+  std::string id; /* ~ 32 */
+  std::string name /* ~ 256 */;
 
+  /* internal variables */
+  int fmc_forced_speed;
+  int fmc_forced_altitude;
+  bool fmc_star;
+  bool fmc_sid;
+  
   NavAidInfo() : ref(0), type(0), lat(0.0), lon(0.0), height(0.0), freq(0),
-     heading(0), id(""), name("") {
+    heading(0), id(""), name(""), fmc_forced_speed(0), fmc_forced_altitude(0),
+    fmc_star(false), fmc_sid(false) {
   }
   NavAidInfo(XPLMNavRef& ref, int& type, float& lat, float& lon,
              float& height, int& freq, float& heading, char id[],
              char name[]) :
   ref(ref), type(type), lat(lat), lon(lon), height(height),
-    freq(freq), heading(heading), id(id), name(name) {
+    freq(freq), heading(heading), id(id), name(name), fmc_forced_speed(0),
+    fmc_forced_altitude(0), fmc_star(false), fmc_sid(false) {
   }
 };
 
