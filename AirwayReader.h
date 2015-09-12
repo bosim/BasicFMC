@@ -107,13 +107,18 @@ public:
       }
     }
 
+    std::vector<AirwaySegment> found_result;
+    std::set<std::string> visited;
+
     for(size_t i=0; i < paths.size(); ++i) {
-      std::vector<AirwaySegment> found_result;
+      found_result.clear();
+      visited.clear();
+      
       std::string tmp = paths[i].first;
       found_result.push_back(temp_result[paths[i].second]);
-      std::set<std::string> visited;
       visited.insert(source);
       bool found = true;
+
       while(found) {
         found = false;
         for(size_t j=0; j < temp_result.size(); j++) {
@@ -160,6 +165,7 @@ public:
             result.push_back(navaid);
           }
         }
+        break;
       }
     }
   }
