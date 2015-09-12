@@ -40,16 +40,18 @@ void ProgressPage::Update() {
   
   if(this->flight->flightplan.size() > 0) {
     ss.str("");
-    ss << std::fixed << std::setprecision(1)
+    ss << std::fixed << std::setprecision(0)
        << this->flight->flightplan[0].fmc_distance;
+    ss << " " << "nm";
 
     this->line1 = this->FormatString(this->flight->flightplan[0].id,
                                      ss.str());
   }
   if(this->flight->flightplan.size() > 1) {
     ss.str("");
-    ss << std::fixed << std::setprecision(1)
+    ss << std::fixed << std::setprecision(0)
        << this->flight->flightplan[1].fmc_distance;
+    ss << " " << "nm";
 
     this->line2 = this->FormatString(this->flight->flightplan[1].id,
                                      ss.str());
@@ -58,13 +60,14 @@ void ProgressPage::Update() {
   if(this->flight->flightplan.size() > 0) {
     NavAidInfo* last_waypoint = &this->flight->flightplan[this->flight->flightplan.size()-1];
     NavAidInfo* dest_airport = &this->flight->dest_airport;
+
     double distance_to_last = last_waypoint->fmc_distance;
-    double distance_to_airport = distance(last_waypoint->lat, last_waypoint->lon,
-                                          dest_airport->lat, dest_airport->lon);
+    double distance_to_airport = distance(last_waypoint->lat, last_waypoint->lon, dest_airport->lat, dest_airport->lon);
     double distance_to_dest = distance_to_last + distance_to_airport;
  
     ss.str("");
-    ss << std::fixed << std::setprecision(1) << distance_to_dest;
+    ss << std::fixed << std::setprecision(0) << distance_to_dest;
+    ss << " " << "nm";
     this->line3 = this->FormatString(dest_airport->id,
                                      ss.str());
     
