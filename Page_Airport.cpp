@@ -18,6 +18,10 @@
 
 #include "Page_Airport.h"
 
+#include "Pages.h"
+
+extern Pages* pages;
+
 AirportPage::AirportPage(Flight* flight) : Page(flight), mode(MODE_OVERVIEW), offset(0), selected_runway(-1) {
 }
 
@@ -193,7 +197,7 @@ void AirportPage::DepArrHandleSK(int key) {
         
         if(start >= 0 && end >= 0) {
           this->flight->flightplan.erase(this->flight->flightplan.begin() + start,
-                                         this->flight->flightplan.begin() + end);
+                                         this->flight->flightplan.begin() + end + 1);
         }
       }
       
@@ -258,6 +262,11 @@ void AirportPage::DepArrHandleSK(int key) {
         }
       }
       this->flight->SyncToXPFMC();
+
+      this->mode = MODE_OVERVIEW;
+
+      /* A bit of a hack, but not really any other way around */
+      pages->SwitchPage("legs");
     }
   }
   else if(runway_index >= 0) {
