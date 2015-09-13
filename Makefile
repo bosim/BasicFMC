@@ -47,8 +47,7 @@ CFLAGS := $(DEFINES) $(INCLUDES) -fPIC -fvisibility=hidden -Wall -std=c++11
 .PHONY: all clean $(TARGET)
 .SECONDARY: $(ALL_OBJECTS) $(ALL_OBJECTS64) $(ALL_DEPS)
 
-#$(TARGET): $(BUILDDIR)/$(TARGET)/32/lin.xpl $(BUILDDIR)/$(TARGET)/64/lin.xpl
-$(TARGET): $(BUILDDIR)/$(TARGET)/64/lin.xpl
+$(TARGET): $(BUILDDIR)/$(TARGET)/32/lin.xpl $(BUILDDIR)/$(TARGET)/64/lin.xpl
 
 $(BUILDDIR)/$(TARGET)/64/lin.xpl: $(ALL_OBJECTS64)
 	@echo Linking $@
@@ -83,6 +82,10 @@ $(BUILDDIR)/obj64/%.o : %.cpp
 clean:
 	@echo Cleaning out everything.
 	rm -rf $(BUILDDIR)
+
+install:
+	cp -r $(BUILDDIR)/$(TARGET)/32 $(HOME)/X-Plane\ 10/Resources/plugins/$(TARGET)/
+	cp -r $(BUILDDIR)/$(TARGET)/64 $(HOME)/X-Plane\ 10/Resources/plugins/$(TARGET)/
 
 # Include any dependency turds, but don't error out if they don't exist.
 # On the first build, every .c is dirty anyway.  On future builds, if the
