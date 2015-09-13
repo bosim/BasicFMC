@@ -59,6 +59,20 @@ XPLMTextureID Texture[MAX_TEXTURES];
 Pages* pages;
 Flight* flight;
 
+/* Required code for compiling on Windows, thanks to Pikitanga / Duncan */
+#if IBM
+BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+  switch (ul_reason_for_call) {
+  case DLL_PROCESS_ATTACH:
+  case DLL_THREAD_ATTACH:
+  case DLL_THREAD_DETACH:
+  case DLL_PROCESS_DETACH:
+    break;
+  }
+
+  return TRUE;
+}
+#endif
 
 PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
   XPLMEnableFeature("XPLM_USE_NATIVE_PATHS",1);
