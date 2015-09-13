@@ -24,29 +24,61 @@
 #include "Page.h"
 #include "Flight.h"
 
-const int MODE_OVERVIEW = 1;
-const int MODE_DEPARR = 2;
+class DepArrPage : public Page {
+ public:
+  DepArrPage(Flight* flight) : Page(flight), offset(0), selected_runway(-1) { }
+  void PrintLine(unsigned int offset, std::string* line, std::vector<std::string>* runways, std::vector<std::string>* procedures);
+  void Update();
+  void HandleSK(int key);
+  virtual bool OnSwitch() {
+    this->procedures_labels.clear();
+    this->selected_runway = -1;
+    return true;
+  }
+ protected:
+  unsigned int offset;
+  unsigned int selected_runway;
+  bool sid;
+  std::vector<std::string>* runways;
+  std::vector<Procedure>* procedures;
+  std::vector<std::string> procedures_labels;
+};
+
+class DepPage : public DepArrPage {
+ public:
+  DepPage(Flight* flight) : DepArrPage(flight) {
+    this->sid = true;
+    this->runways = &this->flight->sids_runways;
+    this->procedures = &this->flight->sids;
+  }
+  void Update() {
+    this->heading = this->FormatString(std::string("Departures"),
+                                       std::string("1/1"));
+    DepArrPage::Update();
+  }
+};
+
+class ArrPage : public DepArrPage {
+ public:
+  ArrPage(Flight* flight) : DepArrPage(flight) {
+    this->sid = false;
+    this->runways = &this->flight->stars_runways;
+    this->procedures = &this->flight->stars;
+  }
+  void Update() {
+    this->heading = this->FormatString(std::string("Arrivals"),
+                                       std::string("1/1"));
+    DepArrPage::Update();
+  }
+};
 
 class AirportPage : public Page {
 
  public:
   AirportPage(Flight* flight);
-  void PrintLine(unsigned int offset, std::string* line, std::vector<std::string>* runways, std::vector<std::string>* procedures);
-  void DepArrUpdate();
-  void DepArrHandleSK(int key);
-  void OverviewUpdate();
-  void OverviewHandleSK(int key);
   void Update();
   void HandleSK(int key);
   bool HandleDelete();
- private:
-  int mode;
-  bool sid;
-  unsigned int offset;
-  unsigned int selected_runway;
-  std::vector<std::string>* runways;
-  std::vector<Procedure>* procedures;
-  std::vector<std::string> procedures_labels;
 };
 
 #endif

@@ -35,7 +35,11 @@ bool Pages::SwitchPage(std::string name) {
     return false;
   }
 
-  this->page = iter->second;
+  Page* page = iter->second;
+  if(page->OnSwitch()) {
+    this->page = page;
+  }
+
   return true;
 }
 

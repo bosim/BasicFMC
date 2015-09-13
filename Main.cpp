@@ -112,6 +112,12 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
   page = new AirportPage(flight);
   pages->RegisterPage("airport", page);
 
+  page = new DepPage(flight);
+  pages->RegisterPage("airport_dep", page);
+
+  page = new ArrPage(flight);
+  pages->RegisterPage("airport_arr", page);
+
   page = new ProgressPage(flight);
   pages->RegisterPage("progress", page);
   

@@ -64,6 +64,10 @@ class Page {
   virtual void HandleSK(const int key) {
     throw std::logic_error("Not implemented");
   }
+
+  virtual bool OnSwitch() {
+    return true;
+  }
   
  protected:
   Flight* flight;

@@ -22,26 +22,7 @@
 
 extern Pages* pages;
 
-AirportPage::AirportPage(Flight* flight) : Page(flight), mode(MODE_OVERVIEW), offset(0), selected_runway(-1) {
-}
-
-void AirportPage::OverviewUpdate() {
-  this->heading = this->FormatString(std::string("Airport"),
-                                     std::string("1/1"));
-
-  this->line1 = this->FormatString(this->flight->dep_airport.id,
-                                     std::string("DEP >"));
-  this->line2 = this->FormatString(this->flight->dest_airport.id,
-                                     std::string("ARR >"));
-  this->line3 = "";
-  this->line4 = "";
-  this->line5 = "";
-  this->line6 = "";
-
-  this->Draw();
-}
-
-void AirportPage::PrintLine(unsigned int offset, std::string* line, std::vector<std::string>* runways, std::vector<std::string>* procedures) {
+void DepArrPage::PrintLine(unsigned int offset, std::string* line, std::vector<std::string>* runways, std::vector<std::string>* procedures) {
   std::string left_column = "";
   std::string right_column = "";
 
@@ -64,10 +45,10 @@ void AirportPage::PrintLine(unsigned int offset, std::string* line, std::vector<
   }
 }
 
-void AirportPage::DepArrUpdate() {
+void DepArrPage::Update() {
   std::vector<std::string>* runways = this->runways;
   std::vector<std::string>* procedures = &this->procedures_labels;
-  
+
   this->PrintLine(this->offset, &this->line1, runways, procedures);
   this->PrintLine(this->offset + 1, &this->line2, runways, procedures);
   this->PrintLine(this->offset + 2, &this->line3, runways, procedures);
@@ -79,28 +60,7 @@ void AirportPage::DepArrUpdate() {
 
 }
 
-void AirportPage::OverviewHandleSK(int key) {
-  switch(key) {
-  case RSK1:
-    this->sid = true;
-    this->runways = &this->flight->sids_runways;
-    this->procedures = &this->flight->sids;
-    this->procedures_labels.clear();
-    this->selected_runway = -1;
-    this->mode = MODE_DEPARR;
-    break;
-  case RSK2:
-    this->sid = false;
-    this->runways = &this->flight->stars_runways;
-    this->procedures = &this->flight->stars;
-    this->procedures_labels.clear();
-    this->selected_runway = -1;
-    this->mode = MODE_DEPARR;
-    break;
-  }
-}
-
-void AirportPage::DepArrHandleSK(int key) {
+void DepArrPage::HandleSK(int key) {
   int runway_index = -1;
   int procedure_index = -1;
   
@@ -263,9 +223,6 @@ void AirportPage::DepArrHandleSK(int key) {
       }
       this->flight->SyncToXPFMC();
 
-      this->mode = MODE_OVERVIEW;
-
-      /* A bit of a hack, but not really any other way around */
       pages->SwitchPage("legs");
     }
   }
@@ -285,30 +242,36 @@ void AirportPage::DepArrHandleSK(int key) {
 
 }
 
+AirportPage::AirportPage(Flight* flight) : Page(flight) {
+}
+
 void AirportPage::Update() {
-  switch(this->mode) {
-  case MODE_OVERVIEW:
-    this->OverviewUpdate();
-    break;
-  case MODE_DEPARR:
-    this->DepArrUpdate();
-    break;
-  }
+  this->heading = this->FormatString(std::string("Airport"),
+                                     std::string("1/1"));
+
+  this->line1 = this->FormatString(this->flight->dep_airport.id,
+                                     std::string("DEP >"));
+  this->line2 = this->FormatString(this->flight->dest_airport.id,
+                                     std::string("ARR >"));
+  this->line3 = "";
+  this->line4 = "";
+  this->line5 = "";
+  this->line6 = "";
+
+  this->Draw();
 }
 
 void AirportPage::HandleSK(int key) {
-  switch(this->mode) {
-  case MODE_OVERVIEW:
-    this->OverviewHandleSK(key);
+  switch(key) {
+  case RSK1:
+    pages->SwitchPage("airport_dep");
     break;
-  case MODE_DEPARR:
-    this->DepArrHandleSK(key);
+  case RSK2:
+    pages->SwitchPage("airport_arr");
     break;
   }
-
 }
 
 bool AirportPage::HandleDelete() {
-  this->mode = MODE_OVERVIEW;
   return true;
 }
