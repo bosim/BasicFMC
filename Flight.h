@@ -46,16 +46,20 @@ class Flight {
   }
 
   void SyncToXPFMC() {
-    for(int i=0; i < 100; i++) {
-      XPLMClearFMSEntry(i);
-    }
-    for(unsigned int i=0; i < this->flightplan.size(); i++) {
+    size_t i;
+
+    for(i=0; i < this->flightplan.size(); i++) {
       if(this->flightplan[i].type >= 0) {
-        XPLMSetFMSEntryInfo(i+1, this->flightplan[i].ref, 0);
+        XPLMSetFMSEntryInfo(i+1, this->flightplan[i].ref,
+                            this->flightplan[i].ComputedAltitude());
       } else {
         XPLMSetFMSEntryLatLon(i+1, this->flightplan[i].lat,
-                              this->flightplan[i].lon, 0);
+                              this->flightplan[i].lon,
+                              this->flightplan[i].ComputedAltitude());
       }
+    }
+    for(; i < 99; i++) {
+      XPLMClearFMSEntry(i+1);
     }
 
     XPLMSetDestinationFMSEntry(1);

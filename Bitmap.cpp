@@ -44,12 +44,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 extern XPLMTextureID Texture[MAX_TEXTURES];
 
-/// Loads all our textures
-void LoadTextures(void) {
-  if (!LoadGLTexture(std::string("fmc.bmp"), 0))
-    XPLMDebugString("Panel texture failed to load\n");
-}
-
 /// Loads one texture
 int LoadGLTexture(std::string FileName, int TextureId)
 {
@@ -115,29 +109,28 @@ void SwapEndian(int *Data){}
 #endif
 
 /// Swap the red and blue pixels.
-void SwapRedBlue(IMAGEDATA *ImageData)
-{
-	unsigned char  * srcPixel;
-	int		x,y;
-	unsigned char sTemp;
+void SwapRedBlue(IMAGEDATA *ImageData) {
+  unsigned char* srcPixel;
+  int x,y;
+  unsigned char sTemp;
 
-	/// Does not support 4 channels.
-	if (ImageData->Channels == 4)
-		return;
+  /// Does not support 4 channels.
+  if (ImageData->Channels == 4)
+    return;
 
-	/// Do the swap
-	srcPixel = ImageData->pData;
-	for (y = 0; y < ImageData->Height; ++y)
-		for (x = 0; x < ImageData->Width; ++x)
-		{
-			sTemp = srcPixel[0];
-			srcPixel[0] = srcPixel[2];
-			srcPixel[2] = sTemp;
-
-			srcPixel += 3;
-			if (x == (ImageData->Width - 1))
-				srcPixel += ImageData->Padding;
-		}
+  /// Do the swap
+  srcPixel = ImageData->pData;
+  for (y = 0; y < ImageData->Height; ++y) {
+    for (x = 0; x < ImageData->Width; ++x) {
+      sTemp = srcPixel[0];
+      srcPixel[0] = srcPixel[2];
+      srcPixel[2] = sTemp;
+      
+      srcPixel += 3;
+      if (x == (ImageData->Width - 1))
+        srcPixel += ImageData->Padding;
+    }
+  }
 }
 
 

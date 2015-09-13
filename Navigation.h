@@ -65,6 +65,10 @@ class NavAidInfo {
     freq(freq), heading(heading), id(id), name(name), fmc_forced_speed(0),
     fmc_forced_altitude(0), fmc_star(false), fmc_sid(false) {
   }
+
+  int ComputedAltitude() {
+    return fmc_forced_altitude;
+  }
 };
 
 class Navigation {

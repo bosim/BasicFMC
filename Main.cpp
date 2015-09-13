@@ -75,17 +75,16 @@ BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 #endif
 
 PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
+  int x = 0; int y = 720;
+  int width = 360; int height = 570;
+
+  Page * page;
+
   XPLMEnableFeature("XPLM_USE_NATIVE_PATHS",1);
 
   strcpy(outName, "BasicFMC");
   strcpy(outSig, "BasicFMC");
   strcpy(outDesc, "BasicFMC by Bo Simonsen.");
-
-  int x = 0;
-  int y = 720;
-
-  int width = 360;
-  int height = 570;
 
   FMCWindow = XPLMCreateWindow(x, y, x + width, y - height, 1,
                                FMCWindowCallback, FMCKeyCallback, 
@@ -96,30 +95,21 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
 
   XPLMRegisterFlightLoopCallback(FMCLoopCallback, 1.0, NULL);
   
-  LoadTextures();
+  int result = LoadGLTexture(std::string("fmc.bmp"), 0);
+
+  if(!result) {
+    XPLMDebugString("Could not load FMC texture");
+  }
 
   flight = new Flight();
   pages = new Pages();
-        
-  Page * page;
-  
-  page = new InitPage(flight);
-  pages->RegisterPage("init", page);
-
-  page = new LegsPage(flight);
-  pages->RegisterPage("legs", page);
-
-  page = new AirportPage(flight);
-  pages->RegisterPage("airport", page);
-
-  page = new DepPage(flight);
-  pages->RegisterPage("airport_dep", page);
-
-  page = new ArrPage(flight);
-  pages->RegisterPage("airport_arr", page);
-
-  page = new ProgressPage(flight);
-  pages->RegisterPage("progress", page);
+    
+  page = new InitPage(flight); pages->RegisterPage("init", page);
+  page = new LegsPage(flight); pages->RegisterPage("legs", page);
+  page = new AirportPage(flight); pages->RegisterPage("airport", page);
+  page = new DepPage(flight); pages->RegisterPage("airport_dep", page);
+  page = new ArrPage(flight); pages->RegisterPage("airport_arr", page);
+  page = new ProgressPage(flight); pages->RegisterPage("progress", page);
   
   pages->SwitchPage("init");
   
@@ -168,34 +158,22 @@ void FMCWindowCallback(XPLMWindowID inWindowID, void * inRefcon) {
     PanelBottom = PanelWindowBottom; 
     PanelTop = PanelWindowTop;
     
-    XPLMSetGraphicsState(0/*Fog*/, 1/*TexUnits*/, 0/*Lighting*/,
-                         0/*AlphaTesting*/, 0/*AlphaBlending*/,
-                         0/*DepthTesting*/, 0/*DepthWriting*/);
+    XPLMSetGraphicsState(0, 1, 0, 0, 0, 0, 0);
     
     XPLMBindTexture2d(Texture[FMC_TEXTURE], 0);
     
     glPushMatrix();
     glBegin(GL_QUADS);
 
-    glTexCoord2f(1, 0.0f);
-    glVertex2f(PanelRight, PanelBottom);
-    // Bottom Right Of The Texture and Quad
-    glTexCoord2f(0, 0.0f);
-    glVertex2f(PanelLeft, PanelBottom);
-    // Bottom Left Of The Texture and Quad
-    glTexCoord2f(0, 1.0f);
-    glVertex2f(PanelLeft, PanelTop);
-    // Top Left Of The Texture and Quad
-    glTexCoord2f(1, 1.0f);
-    glVertex2f(PanelRight, PanelTop);
-    // Top Right Of The Texture and Quad
+    glTexCoord2f(1, 0.0f); glVertex2f(PanelRight, PanelBottom);
+    glTexCoord2f(0, 0.0f); glVertex2f(PanelLeft, PanelBottom);
+    glTexCoord2f(0, 1.0f); glVertex2f(PanelLeft, PanelTop);
+    glTexCoord2f(1, 1.0f); glVertex2f(PanelRight, PanelTop);
 
     glEnd();
     glPopMatrix();
 
-    XPLMSetGraphicsState(0/*Fog*/, 0/*TexUnits*/, 0/*Lighting*/,
-                         0/*AlphaTesting*/, 0/*AlphaBlending*/,
-                         0/*DepthTesting*/, 0/*DepthWriting*/);
+    XPLMSetGraphicsState(0, 0, 0, 0, 0, 0, 0);
     
     glFlush();
 
@@ -258,10 +236,8 @@ int FMCMouseClickCallback(XPLMWindowID inWindowID, int x, int y, XPLMMouseStatus
   case xplm_MouseDrag:
     /// We are dragging so update the window position
     if (gDragging) {
-      Left = (x - dX);
-      Right = Left + Weight;
-      Top = (y - dY);
-      Bottom = Top + Height;
+      Left = (x - dX); Right = Left + Weight;
+      Top = (y - dY); Bottom = Top + Height;
       XPLMSetWindowGeometry(inWindowID, Left, Top, Right, Bottom);
     }
     break;

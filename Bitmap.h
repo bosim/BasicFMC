@@ -99,7 +99,6 @@ void SwapEndian(short *Data);
 void SwapEndian(int *Data);
 void SwapRedBlue(IMAGEDATA *ImageData);
 int LoadGLTexture(std::string, int TextureId);
-void LoadTextures(void);
 
 #if APL && __MACH__
 int ConvertPath(const char * inPath, char * outPath, int outPathMaxLen);
