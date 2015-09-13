@@ -27,43 +27,29 @@
 std::string GetPluginDir() {
   char buf[256];
   std::string PluginDir;
-
-#if IBM
-  std::string DirectoryName = "Resources\\Plugins\\BS-FMC\\";
-#else
-  std::string DirectoryName = "Resources/plugins/BS-FMC/";
-#endif
+  std::string Delimiter = std::string(XPLMGetDirectorySeparator());
   
   XPLMGetSystemPath(buf);
-  PluginDir = std::string(buf) + DirectoryName;
+  PluginDir = std::string(buf) + "Resources" + Delimiter + "plugins" + Delimiter + "BasicFMC" + Delimiter;
+
   return PluginDir;
 }
 
 std::string GetAirwayFilename() {
   char buf[256];
   std::string AwyFile;
-
-#if IBM
-  std::string DirectoryName = "Resources\\default data\\earth_awy.dat";
-#else
-  std::string DirectoryName = "Resources/default data/earth_awy.dat";
-#endif
+  std::string Delimiter = std::string(XPLMGetDirectorySeparator());
   
   XPLMGetSystemPath(buf);
-  AwyFile = std::string(buf) + DirectoryName;
+  AwyFile = std::string(buf) + "Resources" + Delimiter + "default data" + Delimiter + "earth_awy.dat";
   return AwyFile;
 }
 
 std::string GetProcedureFilename(std::string Airport, bool star) {
-#if IBM
-  std::string DirectoryName = "FD_FMC\\" + Airport + "\\";
-#else
-  std::string DirectoryName = "FD_FMC/" + Airport + "/";
-#endif
-  
   std::string PluginDir = GetPluginDir();
-  std::string ProcedureFilename = PluginDir + DirectoryName;
-  ProcedureFilename += star ? "STAR_data.csv" : "SID_data.csv";
+  std::string Delimiter = std::string(XPLMGetDirectorySeparator());
+  std::string ProcedureFilename = PluginDir + "FD_FMC" + Delimiter + Airport + Delimiter + (star ? "STAR_data.csv" : "SID_data.csv");
+
   return ProcedureFilename;
 }
 
