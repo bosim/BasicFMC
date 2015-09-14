@@ -42,7 +42,7 @@ CXXOBJECTS64	:= $(patsubst %.cpp, $(BUILDDIR)/obj64/%.o, $(CXXSOURCES))
 ALL_DEPS64		:= $(sort $(CDEPS64) $(CXXDEPS64))
 ALL_OBJECTS64	:= $(sort $(COBJECTS64) $(CXXOBJECTS64))
 
-CFLAGS := $(DEFINES) $(INCLUDES) -fPIC -fvisibility=hidden -Wall -std=c++11
+CFLAGS := $(DEFINES) $(INCLUDES) -fPIC -fvisibility=hidden -Wall
 
 .PHONY: all clean $(TARGET)
 .SECONDARY: $(ALL_OBJECTS) $(ALL_OBJECTS64) $(ALL_DEPS)

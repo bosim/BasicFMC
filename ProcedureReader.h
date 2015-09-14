@@ -132,7 +132,9 @@ public:
       }
     }
 
-    for(auto it = set.begin(); it != set.end(); ++it) {
+    for(std::set<std::string>::iterator it = set.begin();
+        it != set.end();
+        ++it) {
       result.push_back(*it);
     }
   }
@@ -140,16 +142,3 @@ public:
 
 #endif
 
-#if 0
-int main() {
-  ProcedureReader p;
-  std::vector<Procedure> result;
-  p.ReadSidFile("X-Plane 10/Resources/plugins/BS-FMC/FD_FMC/EKCH/SID_data.csv", result);
-  result.clear();
-  p.ReadStarFile("X-Plane 10/Resources/plugins/BS-FMC/FD_FMC/EKCH/STAR_data.csv", result);
-  auto s = p.GetRunways(result);
-  for(auto it=s.begin(); it != s.end(); it++) {
-    std::cout << *it << std::endl;
-  }
-}
-#endif

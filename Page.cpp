@@ -107,7 +107,7 @@ bool Page::HandleDelete() {
     return true;
   }
   else if(this->input.length() > 0) {
-    this->input.pop_back();
+    this->input.erase(this->input.end() - 1);
     return true;
   }
 

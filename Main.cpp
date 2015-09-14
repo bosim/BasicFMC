@@ -122,9 +122,11 @@ PLUGIN_API void	XPluginStop(void) {
   XPLMUnregisterFlightLoopCallback(FMCLoopCallback, NULL);
 
   /* Cleaning up */
-  auto iter_pair = pages->PagesIterator();
+  Pages::PageMapIterators iter_pair = pages->PagesIterator();
   
-  for(auto iter = iter_pair.first; iter != iter_pair.second; iter++) {
+  for(Pages::PageMap::iterator iter = iter_pair.first;
+      iter != iter_pair.second;
+      iter++) {
     delete iter->second;
   }
   
