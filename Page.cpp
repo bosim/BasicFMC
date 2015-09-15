@@ -57,6 +57,24 @@ std::string Page::FormatString(std::string left, std::string right) {
   return ss.str();
 }
 
+void Page::Clear() {
+  this->heading.clear();
+  
+  this->line1_h.clear();
+  this->line2_h.clear();
+  this->line3_h.clear();
+  this->line4_h.clear();
+  this->line5_h.clear();
+  this->line6_h.clear();
+
+  this->line1.clear();
+  this->line2.clear();
+  this->line3.clear();
+  this->line4.clear();
+  this->line5.clear();
+  this->line6.clear();
+}
+
 void Page::Draw() {
   float x;
   float y;

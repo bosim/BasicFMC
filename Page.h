@@ -50,7 +50,8 @@ class Page {
   
   void SetCoordinates(float* left, float* top);
   void DrawString(float x, float y, std::string& str);
-  std::string FormatString(std::string left, std::string right);  
+  std::string FormatString(std::string left, std::string right);
+  void Clear();
   void Draw();
   void HandleInput(char input_char);
 

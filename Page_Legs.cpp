@@ -61,10 +61,7 @@ void LegsPage::PrintLine(unsigned int offset, std::string* line,
     right_column = ss.str();
     (*line) = this->FormatString((*flightplan)[offset].id,
                                  right_column);
-
-  } else {
-    (*line).clear();
-  }
+  } 
   
 }
 
@@ -79,7 +76,9 @@ void LegsPage::LegsUpdate() {
   std::stringstream ss;
 
   ss << current_page << "/" << total_pages;
-  
+
+  this->Clear();
+
   this->heading = this->FormatString(std::string("Flightplan"),
                                      ss.str());
   
@@ -104,6 +103,8 @@ void LegsPage::NavaidUpdate() {
   std::stringstream ss;
 
   ss << current_page << "/" << total_pages;
+
+  this->Clear();
   
   this->heading = this->FormatString(std::string("Select navaid"),
                                      ss.str());
@@ -149,24 +150,12 @@ void LegsPage::LegsHandleSK(int key) {
       offset++;
     }
     return;
-  case LSK1:
-    index = 0;
-    break;
-  case LSK2:
-    index = 1;
-    break;
-  case LSK3:
-    index = 2;
-    break;
-  case LSK4:
-    index = 3;
-    break;
-  case LSK5:
-    index = 4;
-    break;
-  case LSK6:
-    index = 5;
-    break;
+  case LSK1: index = 0; break;
+  case LSK2: index = 1; break;
+  case LSK3: index = 2; break;
+  case LSK4: index = 3; break;
+  case LSK5: index = 4; break;
+  case LSK6: index = 5; break;
   default:
     return;
   }
@@ -255,24 +244,12 @@ void LegsPage::NavaidHandleSK(int key) {
       navaid_offset++;
     }
     return;
-  case LSK1:
-    index = 0;
-    break;
-  case LSK2:
-    index = 1;
-    break;
-  case LSK3:
-    index = 2;
-    break;
-  case LSK4:
-    index = 3;
-    break;
-  case LSK5:
-    index = 4;
-    break;
-  case LSK6:
-    index = 5;
-    break;
+  case LSK1: index = 0; break;
+  case LSK2: index = 1; break;
+  case LSK3: index = 2; break;
+  case LSK4: index = 3; break;
+  case LSK5: index = 4; break;
+  case LSK6: index = 5; break;
   default:
     return;
   }

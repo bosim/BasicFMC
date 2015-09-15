@@ -76,42 +76,18 @@ void DepArrPage::HandleSK(int key) {
       offset++;
     }
     return;
-  case LSK1:
-    runway_index = 0;
-    break;
-  case LSK2:
-    runway_index = 1;
-    break;
-  case LSK3:
-    runway_index = 2;
-    break;
-  case LSK4:
-    runway_index = 3;
-    break;
-  case LSK5:
-    runway_index = 4;
-    break;
-  case LSK6:
-    runway_index = 5;
-    break;
-  case RSK1:
-    procedure_index = 0;
-    break;
-  case RSK2:
-    procedure_index = 1;
-    break;
-  case RSK3:
-    procedure_index = 2;
-    break;
-  case RSK4:
-    procedure_index = 3;
-    break;
-  case RSK5:
-    procedure_index = 4;
-    break;
-  case RSK6:
-    procedure_index = 5;
-    break;
+  case LSK1: runway_index = 0; break;
+  case LSK2: runway_index = 1; break;
+  case LSK3: runway_index = 2; break;
+  case LSK4: runway_index = 3; break;
+  case LSK5: runway_index = 4; break;
+  case LSK6: runway_index = 5; break;
+  case RSK1: procedure_index = 0; break;
+  case RSK2: procedure_index = 1; break;
+  case RSK3: procedure_index = 2; break;
+  case RSK4: procedure_index = 3; break;
+  case RSK5: procedure_index = 4; break;
+  case RSK6: procedure_index = 5; break;
   default:
     return;
   }
@@ -246,6 +222,8 @@ AirportPage::AirportPage(Flight* flight) : Page(flight) {
 }
 
 void AirportPage::Update() {
+  this->Clear();
+
   this->heading = this->FormatString(std::string("Airport"),
                                      std::string("1/1"));
 
@@ -253,10 +231,6 @@ void AirportPage::Update() {
                                      std::string("DEP >"));
   this->line2 = this->FormatString(this->flight->dest_airport.id,
                                      std::string("ARR >"));
-  this->line3 = "";
-  this->line4 = "";
-  this->line5 = "";
-  this->line6 = "";
 
   this->Draw();
 }
