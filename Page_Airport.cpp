@@ -264,14 +264,22 @@ void AirportPage::Update() {
 void AirportPage::HandleSK(int key) {
   switch(key) {
   case RSK1:
-    pages->SwitchPage("airport_dep");
+    if(this->flight->sids.size() > 0) {
+      pages->SwitchPage("airport_dep");
+    }
+    else {
+      this->error = "No SIDS";
+    }
     break;
   case RSK2:
-    pages->SwitchPage("airport_arr");
+    if(this->flight->stars.size() > 0) {
+      pages->SwitchPage("airport_arr");
+    }
+    else {
+      this->error = "No STARS";
+    }
     break;
   }
 }
 
-bool AirportPage::HandleDelete() {
-  return true;
-}
+

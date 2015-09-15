@@ -78,7 +78,6 @@ class AirportPage : public Page {
   AirportPage(Flight* flight);
   void Update();
   void HandleSK(int key);
-  bool HandleDelete();
 };
 
 #endif
