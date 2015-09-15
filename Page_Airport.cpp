@@ -218,6 +218,36 @@ void DepArrPage::HandleSK(int key) {
 
 }
 
+bool DepArrPage::OnSwitch() {  
+  this->procedures_labels.clear();
+  this->selected_runway = -1;
+  return true;
+}
+
+DepPage::DepPage(Flight* flight) : DepArrPage(flight) {
+  this->sid = true;
+  this->runways = &this->flight->sids_runways;
+  this->procedures = &this->flight->sids;
+}
+
+void DepPage::Update() {
+  this->heading = this->FormatString(std::string("Departures"),
+                                     std::string("1/1"));
+  DepArrPage::Update();
+}
+
+ArrPage::ArrPage(Flight* flight) : DepArrPage(flight) {
+  this->sid = false;
+  this->runways = &this->flight->stars_runways;
+  this->procedures = &this->flight->stars;
+}
+
+void ArrPage::Update() {
+  this->heading = this->FormatString(std::string("Arrivals"),
+                                     std::string("1/1"));
+  DepArrPage::Update();
+}
+
 AirportPage::AirportPage(Flight* flight) : Page(flight) {
 }
 
@@ -256,4 +286,11 @@ void AirportPage::HandleSK(int key) {
   }
 }
 
+bool AirportPage::OnSwitch() {
+  if(this->flight->dep_airport.isEmpty() ||
+     this->flight->dest_airport.isEmpty()) {
+    return false;
+  }
 
+  return true;
+}

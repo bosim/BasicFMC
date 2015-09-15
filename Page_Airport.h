@@ -30,11 +30,7 @@ class DepArrPage : public Page {
   void PrintLine(unsigned int offset, std::string* line, std::vector<std::string>* runways, std::vector<std::string>* procedures);
   void Update();
   void HandleSK(int key);
-  virtual bool OnSwitch() {
-    this->procedures_labels.clear();
-    this->selected_runway = -1;
-    return true;
-  }
+  virtual bool OnSwitch();
  protected:
   unsigned int offset;
   unsigned int selected_runway;
@@ -46,30 +42,14 @@ class DepArrPage : public Page {
 
 class DepPage : public DepArrPage {
  public:
-  DepPage(Flight* flight) : DepArrPage(flight) {
-    this->sid = true;
-    this->runways = &this->flight->sids_runways;
-    this->procedures = &this->flight->sids;
-  }
-  void Update() {
-    this->heading = this->FormatString(std::string("Departures"),
-                                       std::string("1/1"));
-    DepArrPage::Update();
-  }
+  DepPage(Flight* flight);
+  void Update();
 };
 
 class ArrPage : public DepArrPage {
  public:
-  ArrPage(Flight* flight) : DepArrPage(flight) {
-    this->sid = false;
-    this->runways = &this->flight->stars_runways;
-    this->procedures = &this->flight->stars;
-  }
-  void Update() {
-    this->heading = this->FormatString(std::string("Arrivals"),
-                                       std::string("1/1"));
-    DepArrPage::Update();
-  }
+  ArrPage(Flight* flight);
+  void Update();
 };
 
 class AirportPage : public Page {
@@ -78,6 +58,7 @@ class AirportPage : public Page {
   AirportPage(Flight* flight);
   void Update();
   void HandleSK(int key);
+  bool OnSwitch();
 };
 
 #endif

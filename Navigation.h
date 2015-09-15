@@ -66,6 +66,14 @@ class NavAidInfo {
     fmc_forced_altitude(0), fmc_star(false), fmc_sid(false) {
   }
 
+  bool isEmpty() {
+    if(this->type == 0 && this->ref == 0) {
+      return true;
+    }
+
+    return false;
+  }
+  
   int ComputedAltitude() {
     return fmc_forced_altitude;
   }
