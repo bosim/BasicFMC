@@ -48,10 +48,6 @@ void InitPage::HandleSK(int key) {
     case LSK1:
       try {
         this->flight->SetDepAirport(this->input);
-        this->flight->sids.clear();
-        this->flight->sids_runways.clear();
-        this->procedure_reader.ReadSidFile(GetProcedureFilename(this->input), this->flight->sids);
-        this->procedure_reader.GetRunways(this->flight->sids, this->flight->sids_runways);
       }
       catch(NavAidNotFoundException e) {
         this->error = e.what();
@@ -61,10 +57,6 @@ void InitPage::HandleSK(int key) {
     case RSK1:
       try {
         this->flight->SetDestAirport(this->input);
-        this->flight->stars.clear();
-        this->flight->stars_runways.clear();
-        this->procedure_reader.ReadStarFile(GetProcedureFilename(this->input, true), this->flight->stars);
-        this->procedure_reader.GetRunways(this->flight->stars, this->flight->stars_runways);
       }
       catch(NavAidNotFoundException e) {
         this->error = e.what();

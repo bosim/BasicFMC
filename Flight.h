@@ -40,9 +40,18 @@ class Flight {
   
   void SetDepAirport(std::string Airport) {
     this->dep_airport = Navigation::FindAirport(Airport);
+    this->sids.clear();
+    this->sids_runways.clear();
+    this->procedure_reader.ReadSidFile(GetProcedureFilename(Airport), this->sids);
+    this->procedure_reader.GetRunways(this->sids, this->sids_runways);
   }
+
   void SetDestAirport(std::string Airport) {
     this->dest_airport = Navigation::FindAirport(Airport);
+    this->stars.clear();
+    this->stars_runways.clear();
+    this->procedure_reader.ReadStarFile(GetProcedureFilename(Airport, true), this->stars);
+    this->procedure_reader.GetRunways(this->stars, this->stars_runways);
   }
 
   void SyncToXPFMC() {
@@ -86,6 +95,8 @@ class Flight {
       }
     }
   }
+ private:
+  ProcedureReader procedure_reader;
 };
 
 #endif

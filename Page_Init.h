@@ -30,8 +30,6 @@ class InitPage : public Page {
   InitPage(Flight* flight);
   void Update();
   void HandleSK(int key);
- private:
-  ProcedureReader procedure_reader;
 };
 
 #endif
