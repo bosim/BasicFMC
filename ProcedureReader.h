@@ -30,7 +30,8 @@
 
 class ProcedureWaypoint {
 public:
-  ProcedureWaypoint() : id(""), lon(0), lat(0) { }
+  ProcedureWaypoint();
+
   std::string id;
   float lon;
   float lat;
@@ -45,99 +46,24 @@ public:
   bool star;
   std::vector<ProcedureWaypoint> waypoints;
 
-  void dump() {
-    std::cout << this->runway << "," << this->name << std::endl;
-    for(size_t i=0; i < waypoints.size(); i++) {
-      std::cout << waypoints[i].id << " " <<
-        waypoints[i].lon << "," <<
-        waypoints[i].lat << " Speed " <<
-        waypoints[i].speed << " Altitude " <<
-        waypoints[i].altitude << std::endl;
-    }
-  }
+  Procedure();
+  void dump();
 };
   
 
 class ProcedureReader {
 public:
-  void ReadSidFile(std::string Filename, std::vector<Procedure>& procedures) {
-    std::ifstream filehandle(Filename.c_str());
-    std::string line;
-    
-    if(filehandle.is_open()) {
-      while(getline(filehandle, line)) {
-        std::vector<std::string> elements;
-        SplitLine(line, elements, ',');
+  Procedure ReadProcedureLine(std::vector<std::string> const& elements, bool star);
 
-        if(elements.size() > 1) {
-          Procedure procedure;
+  void ReadSidWaypoint(std::vector<std::string> const& elements,
+                       Procedure& procedure, size_t offset);
+  void ReadSidFile(std::string Filename, std::vector<Procedure>& procedures);
 
-          procedure.runway = elements[0];
-          procedure.name = elements[1];
-          procedure.star = false;
-
-          for(size_t i=10; i < elements.size(); i = i+7) {
-            ProcedureWaypoint waypoint;
-
-            waypoint.id = elements[i+4];
-            waypoint.lat = atof(elements[i+5].c_str());
-            waypoint.lon = atof(elements[i+6].c_str());
-            waypoint.altitude = 0;
-            waypoint.speed = 0;
-            procedure.waypoints.push_back(waypoint);
-          }
-          procedures.push_back(procedure);
-        }
-      }
-    }
-  }
-  void ReadStarFile(std::string Filename, std::vector<Procedure>& procedures) {
-    std::ifstream filehandle(Filename.c_str());
-    std::string line;
-    
-    if(filehandle.is_open()) {
-      while(getline(filehandle, line)) {
-        std::vector<std::string> elements;
-        SplitLine(line, elements, ',');
-
-        if(elements.size() > 1) {
-          Procedure procedure;
-
-          procedure.runway = elements[0];
-          procedure.name = elements[1];
-          procedure.star = true;
-
-          for(size_t i=4; i < elements.size(); i = i+15) {
-            ProcedureWaypoint waypoint;
-
-            waypoint.id = elements[i+4];
-            waypoint.lat = atof(elements[i+5].c_str());
-            waypoint.lon = atof(elements[i+6].c_str());
-            waypoint.altitude = atoi(elements[i+8].c_str());
-            waypoint.speed = atoi(elements[i+9].c_str());
-            procedure.waypoints.push_back(waypoint);
-          }
-          procedures.push_back(procedure);
-        }
-      }
-    }
-  }
-
-  void GetRunways(std::vector<Procedure>& procedures, std::vector<std::string>& result) {
-    std::set<std::string> set;
-
-    for(size_t i=0; i < procedures.size(); i++) {
-      if(set.find(procedures[i].runway) == set.end()) {
-        set.insert(procedures[i].runway);
-      }
-    }
-
-    for(std::set<std::string>::iterator it = set.begin();
-        it != set.end();
-        ++it) {
-      result.push_back(*it);
-    }
-  }
+  void ReadStarWaypoint(std::vector<std::string> const& elements,
+                        Procedure& procedure, size_t offset);
+  void ReadStarFile(std::string Filename, std::vector<Procedure>& procedures);
+  
+  void GetRunways(std::vector<Procedure>& procedures, std::vector<std::string>& result); 
 };
 
 #endif

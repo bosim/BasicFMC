@@ -14,6 +14,7 @@ SOURCES = \
 	Pages.cpp \
 	InputHandler.cpp \
 	Utils.cpp \
+	ProcedureReader.cpp \
 	Main.cpp
 
 LIBS = 
