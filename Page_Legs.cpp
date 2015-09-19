@@ -36,7 +36,7 @@ LegsPage::LegsPage(Flight* flight) : Page(flight) {
     this->airway_reader.setFilename(GetAirwayFilename(false));
   }
   else {
-    XPLMDebugString("BsicFMC: Custom data found using it for airways\n");
+    XPLMDebugString("BasicFMC: Custom data found using it for airways\n");
   }
 }
 
