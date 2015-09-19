@@ -54,7 +54,6 @@ void DepArrPage::Update() {
   this->PrintLine(this->offset + 2, &this->line3, runways, procedures);
   this->PrintLine(this->offset + 3, &this->line4, runways, procedures);
   this->PrintLine(this->offset + 4, &this->line5, runways, procedures);
-  this->PrintLine(this->offset + 5, &this->line6, runways, procedures);
 
   this->Draw();
 
@@ -66,14 +65,17 @@ void DepArrPage::HandleSK(int key) {
   
   switch(key) {
   case BUTTON_UP:
-    if(this->offset > 0) {
-      offset--;
+    if(static_cast<int>(this->offset) - 5 > 0) {
+      this->offset = this->offset - 5;
+    }
+    else {
+      this->offset = 0;
     }
     return;
   case BUTTON_DOWN:
-    if(this->offset + 1 < std::max((*this->runways).size(),
+    if(this->offset + 5 < std::max((*this->runways).size(),
                                    this->procedures_labels.size())) {
-      offset++;
+      this->offset = this->offset + 5;
     }
     return;
   case LSK1: runway_index = 0; break;
@@ -81,13 +83,13 @@ void DepArrPage::HandleSK(int key) {
   case LSK3: runway_index = 2; break;
   case LSK4: runway_index = 3; break;
   case LSK5: runway_index = 4; break;
-  case LSK6: runway_index = 5; break;
+  //case LSK6: runway_index = 5; break;
   case RSK1: procedure_index = 0; break;
   case RSK2: procedure_index = 1; break;
   case RSK3: procedure_index = 2; break;
   case RSK4: procedure_index = 3; break;
   case RSK5: procedure_index = 4; break;
-  case RSK6: procedure_index = 5; break;
+  //case RSK6: procedure_index = 5; break;
   default:
     return;
   }

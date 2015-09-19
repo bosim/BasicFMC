@@ -82,8 +82,8 @@ void LegsPage::LegsUpdate() {
   
   flightplan = &this->flight->flightplan;
 
-  unsigned int current_page = ceil(float(this->offset) / 6) + 1;
-  unsigned int total_pages = ceil(float((*flightplan).size()) / 6) + 1;
+  unsigned int current_page = ceil(float(this->offset) / 5) + 1;
+  unsigned int total_pages = floor(float((*flightplan).size()) / 5) + 1;
 
   std::stringstream ss;
 
@@ -99,7 +99,6 @@ void LegsPage::LegsUpdate() {
   this->PrintLine(this->offset + 2, &this->line3, flightplan);
   this->PrintLine(this->offset + 3, &this->line4, flightplan);
   this->PrintLine(this->offset + 4, &this->line5, flightplan);
-  this->PrintLine(this->offset + 5, &this->line6, flightplan);
   
   this->Draw();
 }
@@ -109,8 +108,8 @@ void LegsPage::NavaidUpdate() {
   
   navaids = &this->navaids;
 
-  unsigned int current_page = ceil(float(this->navaid_offset) / 6) + 1;
-  unsigned int total_pages = ceil(float((*navaids).size()) / 6) + 1;
+  unsigned int current_page = ceil(float(this->navaid_offset) / 5) + 1;
+  unsigned int total_pages = floor(float((*navaids).size()) / 5) + 1;
 
   std::stringstream ss;
 
@@ -126,7 +125,6 @@ void LegsPage::NavaidUpdate() {
   this->PrintLine(this->navaid_offset + 2, &this->line3, navaids, true);
   this->PrintLine(this->navaid_offset + 3, &this->line4, navaids, true);
   this->PrintLine(this->navaid_offset + 4, &this->line5, navaids, true);
-  this->PrintLine(this->navaid_offset + 5, &this->line6, navaids, true);
   
   this->Draw();
 
@@ -153,13 +151,15 @@ void LegsPage::LegsHandleSK(int key) {
   
   switch(key) {
   case BUTTON_UP:
-    if(this->offset > 0) {
-      offset--;
+    if(static_cast<int>(this->offset) - 5 > 0) {
+      this->offset = this->offset - 5;
+    } else {
+      this->offset = 0;
     }
     return;
   case BUTTON_DOWN:
-    if(this->offset + 1 < (*flightplan).size()) {
-      offset++;
+    if(this->offset + 5 < (*flightplan).size()) {
+      offset = offset + 5;
     }
     return;
   case LSK1: index = 0; break;
@@ -167,7 +167,7 @@ void LegsPage::LegsHandleSK(int key) {
   case LSK3: index = 2; break;
   case LSK4: index = 3; break;
   case LSK5: index = 4; break;
-  case LSK6: index = 5; break;
+  //case LSK6: index = 5; break;
   default:
     return;
   }
@@ -277,13 +277,16 @@ void LegsPage::NavaidHandleSK(int key) {
 
   switch(key) {
   case BUTTON_UP:
-    if(this->navaid_offset > 0) {
-      navaid_offset--;
+    if(static_cast<int>(this->navaid_offset) - 5 > 0) {
+      this->navaid_offset = this->navaid_offset - 5;
+    }
+    else {
+      this->navaid_offset = 0;
     }
     return;
   case BUTTON_DOWN:
-    if(this->navaid_offset + 1 < this->navaids.size()) {
-      navaid_offset++;
+    if(this->navaid_offset + 5 < this->navaids.size()) {
+      this->navaid_offset = this->navaid_offset + 5;
     }
     return;
   case LSK1: index = 0; break;
@@ -291,7 +294,7 @@ void LegsPage::NavaidHandleSK(int key) {
   case LSK3: index = 2; break;
   case LSK4: index = 3; break;
   case LSK5: index = 4; break;
-  case LSK6: index = 5; break;
+  //case LSK6: index = 5; break;
   default:
     return;
   }
