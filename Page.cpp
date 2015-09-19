@@ -84,23 +84,23 @@ void Page::Draw() {
 
   this->DrawString(x+70, y-40, this->heading);
   
-  this->DrawString(x+70, y-65, this->line1_h);
-  this->DrawString(x+70, y-80, this->line1);
+  this->DrawString(x+70, y-55, this->line1_h);
+  this->DrawString(x+70, y-70, this->line1);
   
-  this->DrawString(x+70, y-95, this->line2_h);
-  this->DrawString(x+70, y-110, this->line2);
+  this->DrawString(x+70, y-85, this->line2_h);
+  this->DrawString(x+70, y-100, this->line2);
   
-  this->DrawString(x+70, y-125, this->line3_h);
-  this->DrawString(x+70, y-140, this->line3);
+  this->DrawString(x+70, y-115, this->line3_h);
+  this->DrawString(x+70, y-130, this->line3);
   
-  this->DrawString(x+70, y-155, this->line4_h);
-  this->DrawString(x+70, y-170, this->line4);
+  this->DrawString(x+70, y-145, this->line4_h);
+  this->DrawString(x+70, y-160, this->line4);
   
-  this->DrawString(x+70, y-185, this->line5_h);
-  this->DrawString(x+70, y-200, this->line5);
+  this->DrawString(x+70, y-175, this->line5_h);
+  this->DrawString(x+70, y-190, this->line5);
   
-  this->DrawString(x+70, y-215, this->line6_h);
-  this->DrawString(x+70, y-230, this->line6);
+  this->DrawString(x+70, y-205, this->line6_h);
+  this->DrawString(x+70, y-220, this->line6);
 
   std::string end_line;
   if(this->error.length() > 0) {
@@ -110,7 +110,7 @@ void Page::Draw() {
     end_line = this->FormatString(this->input, this->GetStatus());
   }
   
-  this->DrawString(x+70, y-250, end_line);
+  this->DrawString(x+70, y-240, end_line);
 }
 
 void Page::HandleInput(char input_char) {

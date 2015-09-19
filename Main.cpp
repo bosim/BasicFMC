@@ -76,7 +76,7 @@ BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
   int x = 0; int y = 720;
-  int width = 360; int height = 570;
+  int width = 360; int height = 557;
 
   Page * page;
 

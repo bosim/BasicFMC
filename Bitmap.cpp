@@ -75,39 +75,6 @@ int LoadGLTexture(std::string FileName, int TextureId)
   return Status;
 }
 
-
-/// Cross Platform Bitmap functions - Sandy Barbour 2003
-/// Functions to handle endian differeneces between windows, linux and mac.
-#if APL
-short Endian(short Data) {
-  unsigned char *pBuffer = (unsigned char *)&Data;
-  short Result = (short)(pBuffer[0] & 0xff) + ( (short)(pBuffer[1] & 0xff) << 8) ;
-  return(Result);
-}
-
-int Endian(int Data) {
-  unsigned char *pBuffer = (unsigned char *)&Data;
-  int Result = 		(int)(pBuffer[0] & 0xff)
-    + ( (int)(pBuffer[1] & 0xff) << 8)
-    + ( (int)(pBuffer[2] & 0xff) << 16)
-    + ( (int)(pBuffer[3] & 0xff) << 24);
-  
-  return(Result);
-}
-
-void SwapEndian(short *Data) {
-  *Data = Endian(*Data);
-}
-
-void SwapEndian(int *Data) {
-  *Data = Endian(*Data);
-}
-#else
-/// Only the mac needs these so dummy functions for windows and linux.
-void SwapEndian(short *Data){}
-void SwapEndian(int *Data){}
-#endif
-
 /// Swap the red and blue pixels.
 void SwapRedBlue(IMAGEDATA *ImageData) {
   unsigned char* srcPixel;
@@ -148,23 +115,10 @@ int BitmapLoader(const char * FilePath, IMAGEDATA * ImageData) {
   if (BitmapFile != NULL) {
     if (fread(&Header, sizeof(Header), 1, BitmapFile) == 1) {
       if (fread(&ImageInfo, sizeof(ImageInfo), 1, BitmapFile) == 1) {
-        /// Handle Header endian.
-        SwapEndian(&Header.bfSize);
-        SwapEndian(&Header.bfOffBits);
-        
-        /// Handle ImageInfo endian.
-        SwapEndian(&ImageInfo.biWidth);
-        SwapEndian(&ImageInfo.biHeight);
-        SwapEndian(&ImageInfo.biBitCount);
 
         /// Make sure that it is a bitmap.
-#if APL && defined(__POWERPC__)
-        if (((Header.bfType & 0xff) == 'M') &&
-            (((Header.bfType >> 8) & 0xff) == 'B') &&
-#else
         if (((Header.bfType & 0xff) == 'B') &&
             (((Header.bfType >> 8) & 0xff) == 'M') &&
-#endif
             (ImageInfo.biBitCount == 24) &&
             (ImageInfo.biWidth > 0) &&
             (ImageInfo.biHeight > 0)) {
