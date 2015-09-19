@@ -162,7 +162,7 @@ void LegsPage::LegsHandleSK(int key) {
   }
 
   unsigned int operation_index = this->offset + index;
-
+  
   if(!this->delete_mode && this->input.find("/") != std::string::npos) {
     std::string::size_type pos = this->input.find("/");
     std::string source;
@@ -195,6 +195,35 @@ void LegsPage::LegsHandleSK(int key) {
     this->input.clear();
   }
   else if(!this->delete_mode) {
+    /* We can press LSK and if no input the current navaid is copied to input */
+    if(this->input.size() == 0 && operation_index < this->flight->flightplan.size()) {
+      this->input = this->flight->flightplan[operation_index].id;
+      return;
+    }
+    else if(this->input.size() == 0) {
+      return;
+    }
+
+    int found_index = -1;
+
+    for(size_t i = 0; i < this->flight->flightplan.size(); i++) {
+      if(this->flight->flightplan[i].id == this->input) {
+        if(found_index > 0) {
+          this->error = "Duplicate waypoint aborting";
+          return;
+        }
+
+        found_index = i;
+      }
+    }
+
+    if(found_index > 0) {
+      this->flight->flightplan.erase(this->flight->flightplan.begin() + operation_index,
+                                     this->flight->flightplan.begin() + found_index);
+      this->input.clear();
+      return;
+    }
+
     /* Clear navaids storage to ensure consistency */
     this->navaids.clear();
 
