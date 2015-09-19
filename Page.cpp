@@ -57,6 +57,14 @@ std::string Page::FormatString(std::string left, std::string right) {
   return ss.str();
 }
 
+std::string Page::GenerateHeading(std::string heading, unsigned int current_page, unsigned int total_pages) {
+  std::stringstream ss;
+
+  ss << current_page << "/" << total_pages;
+  
+  return this->FormatString(heading, ss.str());
+}
+
 void Page::Clear() {
   this->heading.clear();
   

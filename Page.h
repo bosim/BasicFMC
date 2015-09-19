@@ -51,6 +51,8 @@ class Page {
   void SetCoordinates(float* left, float* top);
   void DrawString(float x, float y, std::string& str);
   std::string FormatString(std::string left, std::string right);
+  std::string GenerateHeading(std::string heading, unsigned int current_page,
+                              unsigned int total_pages);
   void Clear();
   void Draw();
   void HandleInput(char input_char);

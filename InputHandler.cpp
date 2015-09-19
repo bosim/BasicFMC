@@ -222,6 +222,9 @@ void InputHandler(int &dX, int &dY) {
   else if(CoordInRect(dX, dY, 229, -297, 263, -321)) {
     pages->SwitchPage("progress");
   }
+  else if(CoordInRect(dX, dY, 92, -264, 126, -286)) {
+    pages->SwitchPage("route");
+  }
   else if(CoordInRect(dX, dY, 47, -369, 80, -390)) {
     page->HandleSK(BUTTON_UP);
   }

@@ -16,6 +16,8 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cmath>
+
 #include "Page_Airport.h"
 
 #include "Pages.h"
@@ -48,7 +50,7 @@ void DepArrPage::PrintLine(unsigned int offset, std::string* line, std::vector<s
 void DepArrPage::Update() {
   std::vector<std::string>* runways = this->runways;
   std::vector<std::string>* procedures = &this->procedures_labels;
-
+  
   this->PrintLine(this->offset, &this->line1, runways, procedures);
   this->PrintLine(this->offset + 1, &this->line2, runways, procedures);
   this->PrintLine(this->offset + 2, &this->line3, runways, procedures);
@@ -233,8 +235,14 @@ DepPage::DepPage(Flight* flight) : DepArrPage(flight) {
 }
 
 void DepPage::Update() {
-  this->heading = this->FormatString(std::string("Departures"),
-                                     std::string("1/1"));
+  unsigned int total_elements = std::max((*this->runways).size(), this->procedures_labels.size());
+  
+  unsigned int current_page = ceil(float(this->offset) / 5) + 1;
+  unsigned int total_pages = floor(float(total_elements) / 5) + 1;
+
+  this->Clear();
+  this->heading = this->GenerateHeading("Departures", current_page, total_pages);
+
   DepArrPage::Update();
 }
 
@@ -245,8 +253,14 @@ ArrPage::ArrPage(Flight* flight) : DepArrPage(flight) {
 }
 
 void ArrPage::Update() {
-  this->heading = this->FormatString(std::string("Arrivals"),
-                                     std::string("1/1"));
+  unsigned int total_elements = std::max((*this->runways).size(), this->procedures_labels.size());
+  
+  unsigned int current_page = ceil(float(this->offset) / 5) + 1;
+  unsigned int total_pages = floor(float(total_elements) / 5) + 1;
+
+  this->Clear();
+  this->heading = this->GenerateHeading("Arrivals", current_page, total_pages);
+
   DepArrPage::Update();
 }
 

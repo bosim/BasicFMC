@@ -85,14 +85,9 @@ void LegsPage::LegsUpdate() {
   unsigned int current_page = ceil(float(this->offset) / 5) + 1;
   unsigned int total_pages = floor(float((*flightplan).size()) / 5) + 1;
 
-  std::stringstream ss;
-
-  ss << current_page << "/" << total_pages;
-
   this->Clear();
 
-  this->heading = this->FormatString(std::string("Flightplan"),
-                                     ss.str());
+  this->heading = this->GenerateHeading("Legs", current_page, total_pages);
   
   this->PrintLine(this->offset, &this->line1, flightplan);
   this->PrintLine(this->offset + 1, &this->line2, flightplan);
@@ -111,14 +106,9 @@ void LegsPage::NavaidUpdate() {
   unsigned int current_page = ceil(float(this->navaid_offset) / 5) + 1;
   unsigned int total_pages = floor(float((*navaids).size()) / 5) + 1;
 
-  std::stringstream ss;
-
-  ss << current_page << "/" << total_pages;
-
   this->Clear();
-  
-  this->heading = this->FormatString(std::string("Select navaid"),
-                                     ss.str());
+
+  this->heading = this->GenerateHeading("Select navaids", current_page, total_pages);
   
   this->PrintLine(this->navaid_offset, &this->line1, navaids, true);
   this->PrintLine(this->navaid_offset + 1, &this->line2, navaids, true);
