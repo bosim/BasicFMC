@@ -23,6 +23,7 @@
 
 LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->offset = 0;
+  this->navaid_offset = 0;
   this->delete_mode = false;
   this->mode = MODE_LEGS;
   this->airway_reader = AirwayReader(GetAirwayFilename()); 
@@ -206,6 +207,7 @@ void LegsPage::LegsHandleSK(int key) {
 
     if(this->navaids.size() > 1) {
       this->operation_index = this->offset + index;
+      this->navaid_offset = 0;
       this->mode = MODE_NAVAID;
       return;
     }
