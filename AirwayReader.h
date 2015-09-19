@@ -61,8 +61,17 @@ public:
 class AirwayReader {
 public:
   AirwayReader() : Filename("") {}
-  AirwayReader(std::string Filename) : Filename(Filename) {}
 
+  bool setFilename(std::string const& Filename) {
+    this->Filename = Filename;
+    std::ifstream filehandle(this->Filename.c_str());
+    if(filehandle.is_open()) {
+      return true;
+    }
+
+    return false;
+  }
+  
   void FindSegment(std::string airway, std::string source, std::string dest, std::vector<NavAidInfo>& result) {
     std::ifstream filehandle(this->Filename.c_str());
     std::string line;

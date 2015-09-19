@@ -26,7 +26,7 @@
 #define pi 3.14159265358979323846
 
 std::string GetPluginDir();
-std::string GetAirwayFilename();
+std::string GetAirwayFilename(bool custom);
 std::string GetProcedureFilename(std::string Airport, bool star=false);
 int CoordInRect(float x, float y, float l, float t, float r, float b);
 void SplitLine(std::string s, std::vector<std::string>& l, char delim, size_t times = 0);

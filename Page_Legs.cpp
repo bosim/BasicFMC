@@ -26,7 +26,18 @@ LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->navaid_offset = 0;
   this->delete_mode = false;
   this->mode = MODE_LEGS;
-  this->airway_reader = AirwayReader(GetAirwayFilename()); 
+  this->airway_reader = AirwayReader();
+
+  /* Logic for using custom data for airways */
+  bool result = this->airway_reader.setFilename(GetAirwayFilename(true));
+
+  if(!result) {
+    XPLMDebugString("BasicFMC: Custom data not found using default airways\n");
+    this->airway_reader.setFilename(GetAirwayFilename(false));
+  }
+  else {
+    XPLMDebugString("BsicFMC: Custom data found using it for airways\n");
+  }
 }
 
 void LegsPage::PrintLine(unsigned int offset, std::string* line,

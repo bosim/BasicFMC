@@ -35,13 +35,18 @@ std::string GetPluginDir() {
   return PluginDir;
 }
 
-std::string GetAirwayFilename() {
+std::string GetAirwayFilename(bool custom) {
   char buf[256];
   std::string AwyFile;
   std::string Delimiter = std::string(XPLMGetDirectorySeparator());
   
   XPLMGetSystemPath(buf);
-  AwyFile = std::string(buf) + "Resources" + Delimiter + "default data" + Delimiter + "earth_awy.dat";
+  if(custom) {
+    AwyFile = std::string(buf) + "Custom Data" + Delimiter + "earth_awy.dat";
+  }
+  else {
+    AwyFile = std::string(buf) + "Resources" + Delimiter + "default data" + Delimiter + "earth_awy.dat";
+  }
   return AwyFile;
 }
 
