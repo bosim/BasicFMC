@@ -23,6 +23,14 @@
 
 #include "Page.h"
 #include "Flight.h"
+#include "AirwayReader.h"
+
+class ItemRTE {
+ public:
+  std::string airway;
+  std::string dest;
+  unsigned int end_index;
+};
 
 class RoutePage : public Page {
 
@@ -30,6 +38,13 @@ class RoutePage : public Page {
   RoutePage(Flight* flight);
   void Update();
   void HandleSK(int key);
+  bool OnSwitch();
+ private:
+  void PrintLine(unsigned int offset, std::string* line);
+  void GenerateRTEs();
+  std::vector<ItemRTE> rtes;
+  unsigned int offset;
+  AirwayReader airway_reader;  
 };
 
 #endif

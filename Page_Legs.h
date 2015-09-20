@@ -49,5 +49,4 @@ class LegsPage : public Page {
   bool delete_mode;
   int mode;
   std::vector<NavAidInfo> navaids;
-  AirwayReader airway_reader;
 };

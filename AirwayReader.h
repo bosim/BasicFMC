@@ -165,12 +165,15 @@ public:
         for(size_t z = 0; z < q + 1; z++) {
           if(z == q) {
             navaid = Navigation::FindNavAidIdLonLat(found_result[z].source, found_result[z].source_lon, found_result[z].source_lat);
+            navaid.fmc_airway = airway;
             result.push_back(navaid);            
             navaid = Navigation::FindNavAidIdLonLat(found_result[z].dest, found_result[z].dest_lon, found_result[z].dest_lat);
+            navaid.fmc_airway = airway;
             result.push_back(navaid);
           }
           else {
             navaid = Navigation::FindNavAidIdLonLat(found_result[z].source, found_result[z].source_lon, found_result[z].source_lat);
+            navaid.fmc_airway = airway;          
             result.push_back(navaid);
           }
         }

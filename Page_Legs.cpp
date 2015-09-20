@@ -26,18 +26,6 @@ LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->navaid_offset = 0;
   this->delete_mode = false;
   this->mode = MODE_LEGS;
-  this->airway_reader = AirwayReader();
-
-  /* Logic for using custom data for airways */
-  bool result = this->airway_reader.setFilename(GetAirwayFilename(true));
-
-  if(!result) {
-    XPLMDebugString("BasicFMC: Custom data not found using default airways\n");
-    this->airway_reader.setFilename(GetAirwayFilename(false));
-  }
-  else {
-    XPLMDebugString("BasicFMC: Custom data found using it for airways\n");
-  }
 }
 
 void LegsPage::PrintLine(unsigned int offset, std::string* line,
@@ -164,38 +152,7 @@ void LegsPage::LegsHandleSK(int key) {
 
   unsigned int operation_index = this->offset + index;
   
-  if(!this->delete_mode && this->input.find("/") != std::string::npos) {
-    std::string::size_type pos = this->input.find("/");
-    std::string source;
-    if(operation_index < (*flightplan).size()) {
-      source = (*flightplan)[operation_index].id;
-    } else {
-      source = (*flightplan)[(*flightplan).size()-1].id; 
-    }
-    std::string airway = this->input.substr(0, pos);
-    std::string dest = this->input.substr(pos+1);
-
-    std::vector<NavAidInfo> waypoints;
-    this->airway_reader.FindSegment(airway, source, dest, waypoints);
-
-    if(waypoints.size() == 0) {
-      this->error = "Airway not found";
-      return;
-    }
-
-    if(operation_index + 1 <= (*flightplan).size()) {
-      for(size_t i=waypoints.size()-1; i > 0; i--) {
-        (*flightplan).insert((*flightplan).begin() + operation_index + 1,
-                             waypoints[i]);
-      }
-    } else {
-      for(size_t i=1; i < waypoints.size(); i++) {
-        (*flightplan).push_back(waypoints[i]);
-      }
-    }
-    this->input.clear();
-  }
-  else if(!this->delete_mode) {
+  if(!this->delete_mode) {
     /* We can press LSK and if no input the current navaid is copied to input */
     if(this->input.size() == 0 && operation_index < this->flight->flightplan.size()) {
       this->input = this->flight->flightplan[operation_index].id;
