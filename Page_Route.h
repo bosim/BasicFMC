@@ -27,9 +27,12 @@
 
 class ItemRTE {
  public:
+ ItemRTE() : airway(), dest(), start_index(0), end_index(0), inserted(false) { }
   std::string airway;
   std::string dest;
+  unsigned int start_index;
   unsigned int end_index;
+  bool inserted;
 };
 
 class RoutePage : public Page {
@@ -38,12 +41,15 @@ class RoutePage : public Page {
   RoutePage(Flight* flight);
   void Update();
   void HandleSK(int key);
+  bool HandleDelete();
   bool OnSwitch();
+  std::string GetStatus();
  private:
   void PrintLine(unsigned int offset, std::string* line);
   void GenerateRTEs();
   std::vector<ItemRTE> rtes;
   unsigned int offset;
+  bool delete_mode;
   AirwayReader airway_reader;  
 };
 
