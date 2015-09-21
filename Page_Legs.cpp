@@ -136,8 +136,8 @@ void LegsPage::LegsHandleSK(int key) {
     }
     return;
   case BUTTON_DOWN:
-    if(this->offset + 5 < (*flightplan).size()) {
-      offset = offset + 5;
+    if(this->offset + 5 <= (*flightplan).size()) {
+      this->offset = this->offset + 5;
     }
     return;
   case LSK1: index = 0; break;
