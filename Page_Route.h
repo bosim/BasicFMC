@@ -27,12 +27,14 @@
 
 class ItemRTE {
  public:
- ItemRTE() : airway(), dest(), start_index(0), end_index(0), inserted(false) { }
+ ItemRTE() : airway(), dest(), start_index(0), end_index(0), inserted(false), sid(false), star(false) { }
   std::string airway;
   std::string dest;
   unsigned int start_index;
   unsigned int end_index;
   bool inserted;
+  bool sid;
+  bool star;
 };
 
 class RoutePage : public Page {

@@ -43,8 +43,17 @@ RoutePage::RoutePage(Flight* flight) : Page(flight), offset(0), delete_mode(fals
 
 void RoutePage::PrintLine(unsigned int offset, std::string* line) {
   if(offset < this->rtes.size()) {
-    (*line) = this->FormatString(this->rtes[offset].airway,
-                                 this->rtes[offset].dest);
+
+    std::string left_column, right_column;
+
+    if(this->rtes[offset].sid) { left_column = "SID"; }
+    else if(this->rtes[offset].star) { left_column = "STAR"; }
+    else if(this->rtes[offset].airway.size() > 0) { left_column = this->rtes[offset].airway; }
+    else { left_column = "DCT"; }
+    
+    right_column = this->rtes[offset].dest;
+
+    (*line) = this->FormatString(left_column, right_column);
   }
   else {
     (*line).clear();
@@ -248,6 +257,7 @@ void RoutePage::GenerateRTEs() {
       item.dest = (*flightplan)[i].id;
       item.start_index = i;
       item.end_index = i;
+      item.sid = true;
       item.inserted = true;
 
       for(i++; i < flightplan->size(); i++) {
@@ -269,6 +279,7 @@ void RoutePage::GenerateRTEs() {
       item.dest = (*flightplan)[i].id;
       item.start_index = i;
       item.end_index = i;
+      item.star = true;
       item.inserted = true;
       
       for(i++; i < flightplan->size(); i++) {
