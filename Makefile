@@ -12,6 +12,7 @@ SOURCES = \
 	Page_Airport.cpp \
 	Page_Progress.cpp \
 	Page_Route.cpp \
+	Page_Navaid.cpp \
 	Pages.cpp \
 	InputHandler.cpp \
 	Utils.cpp \

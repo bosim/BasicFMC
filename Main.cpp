@@ -44,6 +44,7 @@
 #include "Page_Airport.h"
 #include "Page_Progress.h"
 #include "Page_Route.h"
+#include "Page_Navaid.h"
 #include "Flight.h"
 #include "Main.h"
 #include "InputHandler.h"
@@ -112,6 +113,7 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
   page = new ArrPage(flight); pages->RegisterPage("airport_arr", page);
   page = new ProgressPage(flight); pages->RegisterPage("progress", page);
   page = new RoutePage(flight); pages->RegisterPage("route", page);
+  page = new NavaidPage(flight); pages->RegisterPage("navaid", page);
   
   pages->SwitchPage("init");
   

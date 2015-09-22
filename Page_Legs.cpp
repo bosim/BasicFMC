@@ -16,56 +16,51 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Pages.h"
 #include "Page_Legs.h"
 
 #include <cmath>
 #include <sstream>
 
+extern Pages* pages;
+
 LegsPage::LegsPage(Flight* flight) : Page(flight) {
   this->offset = 0;
-  this->navaid_offset = 0;
   this->delete_mode = false;
-  this->mode = MODE_LEGS;
 }
 
 void LegsPage::PrintLine(unsigned int offset, std::string* line,
-                         std::vector<NavAidInfo>* flightplan,
-                         bool coordinates=false) {
+                         std::vector<NavAidInfo>* flightplan) {
 
   std::stringstream ss;
   std::string right_column;
 
   if(offset < (*flightplan).size()) {
-    if(coordinates) {
-      ss << (*flightplan)[offset].lat << " , " << (*flightplan)[offset].lon;
+    ss.str("");
+
+    if((*flightplan)[offset].fmc_forced_speed) {
+      ss << (*flightplan)[offset].fmc_forced_speed;
     }
     else {
-      ss.str("");
-
-      if((*flightplan)[offset].fmc_forced_speed) {
-        ss << (*flightplan)[offset].fmc_forced_speed;
-      }
-      else {
-        ss << "---";
-      }
+      ss << "---";
+    }
       
-      ss << " / ";
+    ss << " / ";
       
-      if((*flightplan)[offset].fmc_forced_altitude) {
-        ss << (*flightplan)[offset].fmc_forced_altitude;
-      }
-      else {
-        ss << "-----";
-      }
+    if((*flightplan)[offset].fmc_forced_altitude) {
+      ss << (*flightplan)[offset].fmc_forced_altitude;
+    }
+    else {
+      ss << "-----";
     }
     right_column = ss.str();
     (*line) = this->FormatString((*flightplan)[offset].id,
                                  right_column);
-  } 
-  
+  }
+
 }
 
-void LegsPage::LegsUpdate() {
+void LegsPage::Update() {
   std::vector<NavAidInfo>* flightplan;
   
   flightplan = &this->flight->flightplan;
@@ -86,42 +81,8 @@ void LegsPage::LegsUpdate() {
   this->Draw();
 }
 
-void LegsPage::NavaidUpdate() {
-  std::vector<NavAidInfo>* navaids;
-  
-  navaids = &this->navaids;
 
-  unsigned int current_page = ceil(float(this->navaid_offset) / 5) + 1;
-  unsigned int total_pages = floor(float((*navaids).size()) / 5) + 1;
-
-  this->Clear();
-
-  this->heading = this->GenerateHeading("Select navaids", current_page, total_pages);
-  
-  this->PrintLine(this->navaid_offset, &this->line1, navaids, true);
-  this->PrintLine(this->navaid_offset + 1, &this->line2, navaids, true);
-  this->PrintLine(this->navaid_offset + 2, &this->line3, navaids, true);
-  this->PrintLine(this->navaid_offset + 3, &this->line4, navaids, true);
-  this->PrintLine(this->navaid_offset + 4, &this->line5, navaids, true);
-  
-  this->Draw();
-
-}
-
-void LegsPage::Update() {
-  switch(this->mode) {
-  case MODE_LEGS:
-    LegsUpdate();
-    break;
-  case MODE_NAVAID:
-    NavaidUpdate();
-    break;
-  default:
-    throw std::logic_error("Mode has wrong value!");
-  }
-}
-
-void LegsPage::LegsHandleSK(int key) {
+void LegsPage::HandleSK(int key) {
   int index;
   std::vector<NavAidInfo>* flightplan;
 
@@ -183,27 +144,27 @@ void LegsPage::LegsHandleSK(int key) {
     }
 
     /* Clear navaids storage to ensure consistency */
-    this->navaids.clear();
+    this->flight->temp_navaids.clear();
 
-    Navigation::FindNavAid(this->input, this->navaids);
+    Navigation::FindNavAid(this->input, this->flight->temp_navaids);
 
-    if(this->navaids.size() == 0) {
+    if(this->flight->temp_navaids.size() == 0) {
       this->error = "Navaid could not be found";
       return;
     }
 
-    if(this->navaids.size() > 1) {
-      this->operation_index = this->offset + index;
-      this->navaid_offset = 0;
-      this->mode = MODE_NAVAID;
+    if(this->flight->temp_navaids.size() > 1) {
+      this->flight->temp_navaid_insert = operation_index;
+      this->input.clear();
+      pages->SwitchPage("navaid");
       return;
     }
 
     if(operation_index + 1 <= (*flightplan).size()) {
       (*flightplan).insert((*flightplan).begin() + operation_index + 1,
-                           this->navaids[0]);
+                           this->flight->temp_navaids[0]);
     } else {
-      (*flightplan).push_back(this->navaids[0]);
+      (*flightplan).push_back(this->flight->temp_navaids[0]);
     }
 
     this->input.clear();
@@ -219,86 +180,11 @@ void LegsPage::LegsHandleSK(int key) {
   this->flight->SyncToXPFMC();
 }
 
-void LegsPage::NavaidHandleSK(int key) {
-  int index;
-
-  switch(key) {
-  case BUTTON_UP:
-    if(static_cast<int>(this->navaid_offset) - 5 > 0) {
-      this->navaid_offset = this->navaid_offset - 5;
-    }
-    else {
-      this->navaid_offset = 0;
-    }
-    return;
-  case BUTTON_DOWN:
-    if(this->navaid_offset + 5 < this->navaids.size()) {
-      this->navaid_offset = this->navaid_offset + 5;
-    }
-    return;
-  case LSK1: index = 0; break;
-  case LSK2: index = 1; break;
-  case LSK3: index = 2; break;
-  case LSK4: index = 3; break;
-  case LSK5: index = 4; break;
-  //case LSK6: index = 5; break;
-  default:
-    return;
-  }
-
-  unsigned int navaid_index = this->navaid_offset + index;
-
-  std::vector<NavAidInfo>* flightplan = &this->flight->flightplan;
-
-  if(this->operation_index + 1 <= (*flightplan).size()) {
-    (*flightplan).insert((*flightplan).begin() + this->operation_index + 1,
-                         navaids[navaid_index]);
-  } else {
-    (*flightplan).push_back(navaids[navaid_index]);
-  }
-
-  this->input.clear();
-  this->flight->SyncToXPFMC();
-
-  /* Let us change mode to LEGS when the waypoint was successfully added */
-  this->mode = MODE_LEGS;
-}
-
-void LegsPage::HandleSK(int key) {
-  switch(this->mode) {
-  case MODE_LEGS:
-    LegsHandleSK(key);
-    break;
-  case MODE_NAVAID:
-    NavaidHandleSK(key);
-    break;
-  }
-}
-
-bool LegsPage::NavaidHandleDelete() {
-  /* Delete will cancel */
-  this->mode = MODE_LEGS;
-  return true;
-}
-
-bool LegsPage::LegsHandleDelete() {
+bool LegsPage::HandleDelete() {
   bool action = Page::HandleDelete();
   if(!action) {
     this->delete_mode = !this->delete_mode;
   }
-  return true;
-}
-
-bool LegsPage::HandleDelete() {
-  switch(this->mode) {
-  case MODE_LEGS:
-    return LegsHandleDelete();
-    break;
-  case MODE_NAVAID:
-    return NavaidHandleDelete();
-    break;
-  }
-
   return true;
 }
 

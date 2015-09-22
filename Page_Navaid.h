@@ -16,26 +16,22 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef PAGE_NAVAID_H
+#define PAGE_NAVAID_H
+
 #include "Page.h"
 #include "Flight.h"
-#include "Utils.h"
-#include "AirwayReader.h"
 
-const int MODE_LEGS = 0;
-const int MODE_NAVAID = 1;
-
-class LegsPage : public Page {
-
+class NavaidPage : public Page {
  public:
-  LegsPage(Flight* flight);
+  NavaidPage(Flight* flight);
   void PrintLine(unsigned int offset, std::string* line,
                  std::vector<NavAidInfo>* flightplan);
   void Update();
   void HandleSK(int key);
-  bool HandleDelete();
-  std::string GetStatus();
+  bool OnSwitch();
  private:
   unsigned int offset;
-  unsigned int operation_index;
-  bool delete_mode;
 };
+
+#endif

@@ -37,6 +37,11 @@ class Flight {
   std::vector<std::string> sids_runways;
   std::vector<Procedure> stars;
   std::vector<std::string> stars_runways;
+
+  /* Temp variables for passing data between legs/rte page and 
+     navaid */
+  std::vector<NavAidInfo> temp_navaids;
+  unsigned int temp_navaid_insert;
   
   void SetDepAirport(std::string Airport) {
     this->dep_airport = Navigation::FindAirport(Airport);
