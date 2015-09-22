@@ -16,8 +16,14 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Pages.h"
+
 #include "Page_Route.h"
 #include "Utils.h"
+
+#include <cmath>
+
+extern Pages * pages;
 
 RoutePage::RoutePage(Flight* flight) : Page(flight), offset(0), delete_mode(false) {
   this->airway_reader = AirwayReader();
@@ -46,6 +52,13 @@ void RoutePage::PrintLine(unsigned int offset, std::string* line) {
 }
 
 void RoutePage::Update() {
+
+  unsigned int current_page = ceil(float(this->offset) / 5) + 1;
+  unsigned int total_pages = floor(float(this->rtes.size()) / 5) + 1;
+
+  this->Clear();
+
+  this->heading = this->GenerateHeading("Route", current_page, total_pages);
 
   this->PrintLine(this->offset, &this->line1);
   this->PrintLine(this->offset + 1, &this->line2);
@@ -100,33 +113,42 @@ void RoutePage::HandleSK(int key) {
     }
     else if(dest_index >= 0) {
       unsigned int operation_index = this->offset + dest_index;
-      if(operation_index < this->rtes.size()) {
-        
-        std::string source = this->rtes[operation_index-1].dest;
-        std::string airway = this->rtes[operation_index].airway;
-        std::string dest = this->input;
-        
-        std::vector<NavAidInfo> waypoints;
-        this->airway_reader.FindSegment(airway, source, dest, waypoints);
 
+      if(operation_index >= this->rtes.size()) {
+        ItemRTE item;
+
+        this->rtes.push_back(item);
+        
+        operation_index = this->rtes.size() - 1;
+      }
+      
+      std::string source = this->rtes[operation_index-1].dest;
+      std::string airway = this->rtes[operation_index].airway;
+      std::string dest = this->input;
+
+      std::vector<NavAidInfo>* flightplan = &this->flight->flightplan;
+      
+      if(airway.size() > 0) {
+        std::vector<NavAidInfo> waypoints;
+
+        this->airway_reader.FindSegment(airway, source, dest, waypoints);
+      
         if(waypoints.size() == 0) {
           this->error = "Airway not found";
           return;
         }
-
+        
         if(this->rtes[operation_index].inserted) {
           ItemRTE item;
           item = this->rtes[operation_index];
-
+          
           this->flight->flightplan.erase(this->flight->flightplan.begin() + item.start_index, this->flight->flightplan.begin() + item.end_index + 1);
         }
         
         this->rtes[operation_index].dest = this->input;
         
         unsigned int insert_index = this->rtes[operation_index-1].end_index;
-        
-        std::vector<NavAidInfo>* flightplan = &this->flight->flightplan;
-        
+                
         if(insert_index + 1 <= (*flightplan).size()) {
           for(size_t i=waypoints.size()-1; i > 0; i--) {
             (*flightplan).insert((*flightplan).begin() + insert_index + 1,
@@ -137,9 +159,37 @@ void RoutePage::HandleSK(int key) {
             (*flightplan).push_back(waypoints[i]);
           }
         }
-        this->input.clear();
-        this->GenerateRTEs();
       }
+      else {
+        unsigned int insert_index = this->rtes[operation_index-1].end_index;
+ 
+        /* Clear navaids storage to ensure consistency */
+        this->flight->temp_navaids.clear();
+
+        Navigation::FindNavAid(this->input, this->flight->temp_navaids);
+
+        if(this->flight->temp_navaids.size() == 0) {
+          this->error = "Navaid could not be found";
+          return;
+        }
+        
+        if(this->flight->temp_navaids.size() > 1) {
+          this->flight->temp_navaid_insert = insert_index;
+          this->input.clear();
+          pages->SwitchPage("navaid");
+          return;
+        }
+        
+        if(insert_index + 1 <= (*flightplan).size()) {
+          (*flightplan).insert((*flightplan).begin() + insert_index + 1,
+                               this->flight->temp_navaids[0]);
+        } else {
+          (*flightplan).push_back(this->flight->temp_navaids[0]);
+        }
+
+      }
+      this->input.clear();
+      this->GenerateRTEs();
     }
   }
   else {
