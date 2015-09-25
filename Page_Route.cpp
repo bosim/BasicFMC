@@ -29,16 +29,24 @@ RoutePage::RoutePage(Flight* flight) : Page(flight), offset(0), delete_mode(fals
 }
 
 void RoutePage::PrintLine(unsigned int offset, std::string* line) {
-  if(offset < this->rtes.size()) {
+  if(offset < this->routes.size()) {
 
     std::string left_column, right_column;
 
-    if(this->rtes[offset].sid) { left_column = "SID"; }
-    else if(this->rtes[offset].star) { left_column = "STAR"; }
-    else if(this->rtes[offset].airway.size() > 0) { left_column = this->rtes[offset].airway; }
-    else { left_column = "DCT"; }
+    if(this->routes[offset].sid) {
+      left_column = "SID";
+    }
+    else if(this->routes[offset].star) {
+      left_column = "STAR";
+    }
+    else if(this->routes[offset].airway.size() > 0) {
+      left_column = this->routes[offset].airway;
+    }
+    else {
+      left_column = "DCT";
+    }
     
-    right_column = this->rtes[offset].dest;
+    right_column = this->routes[offset].dest;
 
     (*line) = this->FormatString(left_column, right_column);
   }
@@ -50,7 +58,7 @@ void RoutePage::PrintLine(unsigned int offset, std::string* line) {
 void RoutePage::Update() {
 
   unsigned int current_page = ceil(float(this->offset) / 5) + 1;
-  unsigned int total_pages = floor(float(this->rtes.size()) / 5) + 1;
+  unsigned int total_pages = floor(float(this->routes.size()) / 5) + 1;
 
   this->Clear();
 
@@ -77,7 +85,7 @@ void RoutePage::HandleSK(int key) {
     }
     return;
   case BUTTON_DOWN:
-    if(this->offset + 5 <= this->rtes.size()) {
+    if(this->offset + 5 <= this->routes.size()) {
       this->offset = this->offset + 5;
     }
     return;
@@ -97,29 +105,29 @@ void RoutePage::HandleSK(int key) {
   if(!this->delete_mode) {
     if(airway_index >= 0) {
       unsigned int operation_index = this->offset + airway_index;
-      if(operation_index < this->rtes.size()) {
+      if(operation_index < this->routes.size()) {
         /* Todo */
       }
       else {
-        ItemRTE item;
+        RouteItem item;
         item.airway = this->input;
-        this->rtes.push_back(item);
+        this->routes.push_back(item);
         this->input.clear();
       }
     }
     else if(dest_index >= 0) {
       unsigned int operation_index = this->offset + dest_index;
 
-      if(operation_index >= this->rtes.size()) {
-        ItemRTE item;
+      if(operation_index >= this->routes.size()) {
+        RouteItem item;
 
-        this->rtes.push_back(item);
+        this->routes.push_back(item);
         
-        operation_index = this->rtes.size() - 1;
+        operation_index = this->routes.size() - 1;
       }
       
-      std::string source = this->rtes[operation_index-1].dest;
-      std::string airway = this->rtes[operation_index].airway;
+      std::string source = this->routes[operation_index-1].dest;
+      std::string airway = this->routes[operation_index].airway;
       std::string dest = this->input;
 
       std::vector<NavAidInfo>* flightplan = &this->flight->flightplan;
@@ -134,16 +142,16 @@ void RoutePage::HandleSK(int key) {
           return;
         }
         
-        if(this->rtes[operation_index].inserted) {
-          ItemRTE item;
-          item = this->rtes[operation_index];
+        if(this->routes[operation_index].inserted) {
+          RouteItem item;
+          item = this->routes[operation_index];
           
           this->flight->flightplan.erase(this->flight->flightplan.begin() + item.start_index, this->flight->flightplan.begin() + item.end_index + 1);
         }
         
-        this->rtes[operation_index].dest = this->input;
+        this->routes[operation_index].dest = this->input;
         
-        unsigned int insert_index = this->rtes[operation_index-1].end_index;
+        unsigned int insert_index = this->routes[operation_index-1].end_index;
                 
         if(insert_index + 1 <= (*flightplan).size()) {
           for(size_t i=waypoints.size()-1; i > 0; i--) {
@@ -157,7 +165,7 @@ void RoutePage::HandleSK(int key) {
         }
       }
       else {
-        unsigned int insert_index = this->rtes[operation_index-1].end_index;
+        unsigned int insert_index = this->routes[operation_index-1].end_index;
  
         /* Clear navaids storage to ensure consistency */
         this->flight->temp_navaids.clear();
@@ -185,22 +193,22 @@ void RoutePage::HandleSK(int key) {
 
       }
       this->input.clear();
-      this->GenerateRTEs();
+      this->GenerateRoutes();
     }
   }
   else {
     unsigned int operation_index = this->offset + airway_index;
 
-    if(airway_index >= 0 && operation_index < this->rtes.size()) {
+    if(airway_index >= 0 && operation_index < this->routes.size()) {
 
-      ItemRTE item = this->rtes[operation_index];
+      RouteItem item = this->routes[operation_index];
 
       if(item.inserted) {
         this->flight->flightplan.erase(this->flight->flightplan.begin() + item.start_index, this->flight->flightplan.begin() + item.end_index + 1);
-        this->GenerateRTEs();
+        this->GenerateRoutes();
       }
       else {
-        this->rtes.erase(this->rtes.begin() + operation_index);
+        this->routes.erase(this->routes.begin() + operation_index);
       }
     }
   }
@@ -215,7 +223,7 @@ bool RoutePage::HandleDelete() {
 }
 
 bool RoutePage::OnSwitch() {
-  this->GenerateRTEs();
+  this->GenerateRoutes();
   return true;
 }
 
@@ -232,13 +240,13 @@ std::string RoutePage::GetStatus() {
   return status;
 }
 
-void RoutePage::GenerateRTEs() {
-  this->rtes.clear();
+void RoutePage::GenerateRoutes() {
+  this->routes.clear();
   std::vector<NavAidInfo>* flightplan = &this->flight->flightplan;
   
   for(size_t i=0; i < flightplan->size();) {
     if((*flightplan)[i].fmc_sid) {
-      ItemRTE item;
+      RouteItem item;
       
       item.airway = "";
       item.dest = (*flightplan)[i].id;
@@ -256,11 +264,11 @@ void RoutePage::GenerateRTEs() {
           break;
         }
       }
-      this->rtes.push_back(item);
+      this->routes.push_back(item);
 
     }
     else if((*flightplan)[i].fmc_star) {
-      ItemRTE item;
+      RouteItem item;
 
       item.airway = "";
       item.dest = (*flightplan)[i].id;
@@ -279,10 +287,10 @@ void RoutePage::GenerateRTEs() {
         }
       }
 
-      this->rtes.push_back(item);
+      this->routes.push_back(item);
     }    
     else if((*flightplan)[i].fmc_airway.size() > 0) {
-      ItemRTE item;
+      RouteItem item;
       int airway_start = i;
 
       item.airway = (*flightplan)[airway_start].fmc_airway;
@@ -301,16 +309,16 @@ void RoutePage::GenerateRTEs() {
         }
       }
 
-      this->rtes.push_back(item);
+      this->routes.push_back(item);
     }
     else if((*flightplan)[i].fmc_airway.size() == 0) {
-      ItemRTE item;
+      RouteItem item;
       item.airway = "";
       item.dest = (*flightplan)[i].id;
       item.start_index = i;
       item.end_index = i;
       item.inserted = true;
-      this->rtes.push_back(item);
+      this->routes.push_back(item);
       i++;
     }
   }

@@ -25,9 +25,10 @@
 #include "Flight.h"
 #include "AirwayReader.h"
 
-class ItemRTE {
+class RouteItem {
  public:
- ItemRTE() : airway(), dest(), start_index(0), end_index(0), inserted(false), sid(false), star(false) { }
+  RouteItem() : airway(), dest(), start_index(0), end_index(0),
+    inserted(false), sid(false), star(false) { }
   std::string airway;
   std::string dest;
   unsigned int start_index;
@@ -48,8 +49,8 @@ class RoutePage : public Page {
   std::string GetStatus();
  private:
   void PrintLine(unsigned int offset, std::string* line);
-  void GenerateRTEs();
-  std::vector<ItemRTE> rtes;
+  void GenerateRoutes();
+  std::vector<RouteItem> routes;
   unsigned int offset;
   bool delete_mode;
   AirwayReader airway_reader;  
