@@ -201,6 +201,7 @@ void RoutePage::HandleSK(int key) {
       }
       this->input.clear();
       this->GenerateRoutes();
+      this->flight->SyncToXPFMC();
     }
   }
   else {
@@ -213,6 +214,7 @@ void RoutePage::HandleSK(int key) {
       if(item.inserted) {
         this->flight->flightplan.erase(this->flight->flightplan.begin() + item.start_index, this->flight->flightplan.begin() + item.end_index + 1);
         this->GenerateRoutes();
+        this->flight->SyncToXPFMC();
       }
       else {
         this->routes.erase(this->routes.begin() + operation_index);
