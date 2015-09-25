@@ -25,20 +25,7 @@
 
 extern Pages * pages;
 
-RoutePage::RoutePage(Flight* flight) : Page(flight), offset(0), delete_mode(false) {
-  this->airway_reader = AirwayReader();
-
-  /* Logic for using custom data for airways */
-  bool result = this->airway_reader.setFilename(GetAirwayFilename(true));
-
-  if(!result) {
-    XPLMDebugString("BasicFMC: Custom data not found using default airways\n");
-    this->airway_reader.setFilename(GetAirwayFilename(false));
-  }
-  else {
-    XPLMDebugString("BasicFMC: Custom data found using it for airways\n");
-  }
-
+RoutePage::RoutePage(Flight* flight) : Page(flight), offset(0), delete_mode(false), airway_reader(AirwayReader(GetAirwayFilename())) {
 }
 
 void RoutePage::PrintLine(unsigned int offset, std::string* line) {

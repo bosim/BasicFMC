@@ -27,7 +27,7 @@
 
 /* Filenames */
 std::string GetPluginDir();
-std::string GetAirwayFilename(bool custom);
+std::string GetAirwayFilename();
 std::string GetFreeNavProcedureFilename(std::string Airport, bool star=false);
 std::string GetGNSProcedureFilename(std::string Airport);
 

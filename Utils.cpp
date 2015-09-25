@@ -17,6 +17,8 @@
  */
 
 #include <cmath> 
+#include <iostream>
+#include <fstream>
 
 #include "XPLMDefs.h"
 #include "XPLMDataAccess.h"
@@ -35,34 +37,47 @@ std::string GetPluginDir() {
   return PluginDir;
 }
 
-std::string GetAirwayFilename(bool custom) {
+std::string GetAirwayFilename() {
   char buf[256];
-  std::string AwyFile;
+  std::string AwyFileCustom, AwyFileDefault;
   std::string Delimiter = std::string(XPLMGetDirectorySeparator());
   
   XPLMGetSystemPath(buf);
-  if(custom) {
-    AwyFile = std::string(buf) + "Custom Data" + Delimiter + "earth_awy.dat";
-  }
-  else {
-    AwyFile = std::string(buf) + "Resources" + Delimiter + "default data" + Delimiter + "earth_awy.dat";
-  }
-  return AwyFile;
-}
+  AwyFileCustom = std::string(buf) + "Custom Data" + Delimiter + "earth_awy.dat";
+  AwyFileDefault = std::string(buf) + "Resources" + Delimiter +
+    "default data" + Delimiter + "earth_awy.dat";
 
-std::string GetFreeNavProcedureFilename(std::string Airport, bool star) {
-  std::string PluginDir = GetPluginDir();
-  std::string Delimiter = std::string(XPLMGetDirectorySeparator());
-  std::string ProcedureFilename = PluginDir + "FD_FMC" + Delimiter + Airport + Delimiter + (star ? "STAR_data.csv" : "SID_data.csv");
+  std::ifstream file_handle(AwyFileCustom.c_str());
+  if(file_handle.good()) {
+    XPLMDebugString("Using custom data airway file\n");
+    return AwyFileCustom;
+  }
 
-  return ProcedureFilename;
+  XPLMDebugString("Using default airway file\n");
+  return AwyFileDefault;
 }
 
 std::string GetGNSProcedureFilename(std::string Airport) {
   char buf[256];
   XPLMGetSystemPath(buf);
   std::string Delimiter = std::string(XPLMGetDirectorySeparator());
-  std::string ProcedureFilename = std::string(buf) + "Resources" + Delimiter + "GNS430" + Delimiter + "navdata" + Delimiter + "Proc" + Delimiter + Airport + ".txt";
+  std::string ProcedureFilenameCustom = std::string(buf) + "Custom Data" + Delimiter + "GNS430" + Delimiter + "navdata" + Delimiter + "Proc" + Delimiter + Airport + ".txt";
+  std::string ProcedureFilenameDefault = std::string(buf) + "Resources" + Delimiter + "GNS430" + Delimiter + "navdata" + Delimiter + "Proc" + Delimiter + Airport + ".txt";
+
+  std::ifstream file_handle(ProcedureFilenameCustom.c_str());
+  if(file_handle.good()) {
+    XPLMDebugString("Using GNS430 custom data procedure\n");
+    return ProcedureFilenameCustom;
+  }
+
+  XPLMDebugString("Using GNS430 default data procedure\n");
+  return ProcedureFilenameDefault;
+}
+
+std::string GetFreeNavProcedureFilename(std::string Airport, bool star) {
+  std::string PluginDir = GetPluginDir();
+  std::string Delimiter = std::string(XPLMGetDirectorySeparator());
+  std::string ProcedureFilename = PluginDir + "FD_FMC" + Delimiter + Airport + Delimiter + (star ? "STAR_data.csv" : "SID_data.csv");
 
   return ProcedureFilename;
 }
