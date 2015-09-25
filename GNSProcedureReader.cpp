@@ -44,18 +44,6 @@ void GNSProcedureReader::ReadProcedures(std::string Filename, std::vector<Proced
 
           got_procedure = true;
         }
-        else if(star && elements[0] == "APPTR") {
-          procedure = Procedure();
-          
-          procedure.name = elements[3];
-          procedure.runway = elements[2];
-          procedure.star = elements[0] == "STAR";
-
-          procedures.push_back(procedure);
-
-          got_procedure = true;
-          
-        }
         else if(got_procedure && procedures.size() > 0 &&
                 (elements[0] == "DF" || elements[0] == "TF" ||
                  elements[0] == "CF" || elements[0] == "IF")) {
