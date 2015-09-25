@@ -105,7 +105,7 @@ void NavaidPage::HandleSK(int key) {
   this->flight->SyncToXPFMC();
 
   /* Let us change mode to LEGS when the waypoint was successfully added */
-  pages->SwitchPage("legs");
+  pages->SwitchPage(this->flight->temp_navaid_came_from);
 }
 
 bool NavaidPage::OnSwitch() {

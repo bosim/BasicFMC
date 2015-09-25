@@ -62,7 +62,7 @@ void RoutePage::Update() {
 
   this->Clear();
 
-  this->heading = this->GenerateHeading("Route", current_page, total_pages);
+  this->heading = this->GenerateHeading("ROUTE", current_page, total_pages);
 
   this->PrintLine(this->offset, &this->line1);
   this->PrintLine(this->offset + 1, &this->line2);
@@ -185,8 +185,9 @@ void RoutePage::HandleSK(int key) {
         }
         
         if(this->flight->temp_navaids.size() > 1) {
-          this->flight->temp_navaid_insert = insert_index;
           this->input.clear();
+          this->flight->temp_navaid_insert = insert_index;
+          this->flight->temp_navaid_came_from = "route";
           pages->SwitchPage("navaid");
           return;
         }
@@ -220,6 +221,8 @@ void RoutePage::HandleSK(int key) {
         this->routes.erase(this->routes.begin() + operation_index);
       }
     }
+
+    this->delete_mode = false;
   }
 }
 

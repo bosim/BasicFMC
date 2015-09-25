@@ -42,6 +42,7 @@ class Flight {
      navaid */
   std::vector<NavAidInfo> temp_navaids;
   unsigned int temp_navaid_insert;
+  std::string temp_navaid_came_from;
   
   void SetDepAirport(std::string Airport) {
     this->dep_airport = Navigation::FindAirport(Airport);

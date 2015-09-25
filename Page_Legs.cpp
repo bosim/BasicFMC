@@ -156,6 +156,7 @@ void LegsPage::HandleSK(int key) {
     if(this->flight->temp_navaids.size() > 1) {
       this->input.clear();
       this->flight->temp_navaid_insert = operation_index;
+      this->flight->temp_navaid_came_from = "legs";
       pages->SwitchPage("navaid");
       return;
     }
