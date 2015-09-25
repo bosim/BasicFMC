@@ -47,7 +47,7 @@ class Flight {
     this->dep_airport = Navigation::FindAirport(Airport);
     this->sids.clear();
     this->sids_runways.clear();
-    this->procedure_reader.ReadSidFile(GetProcedureFilename(Airport), this->sids);
+    this->procedure_reader.ReadSidFile(Airport, this->sids);
     this->procedure_reader.GetRunways(this->sids, this->sids_runways);
   }
 
@@ -55,7 +55,7 @@ class Flight {
     this->dest_airport = Navigation::FindAirport(Airport);
     this->stars.clear();
     this->stars_runways.clear();
-    this->procedure_reader.ReadStarFile(GetProcedureFilename(Airport, true), this->stars);
+    this->procedure_reader.ReadStarFile(Airport, this->stars);
     this->procedure_reader.GetRunways(this->stars, this->stars_runways);
   }
 

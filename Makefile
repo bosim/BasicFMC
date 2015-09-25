@@ -17,6 +17,7 @@ SOURCES = \
 	InputHandler.cpp \
 	Utils.cpp \
 	ProcedureReader.cpp \
+	FreeNavProcedureReader.cpp \
 	Main.cpp
 
 LIBS = 
@@ -87,8 +88,8 @@ clean:
 	rm -rf $(BUILDDIR)
 
 install:
-	cp -r $(BUILDDIR)/$(TARGET)/32 $(HOME)/X-Plane\ 10/Resources/plugins/$(TARGET)/
-	cp -r $(BUILDDIR)/$(TARGET)/64 $(HOME)/X-Plane\ 10/Resources/plugins/$(TARGET)/
+	cp -r $(BUILDDIR)/$(TARGET)/32 /data/bo/X-Plane\ 10/Resources/plugins/$(TARGET)/
+	cp -r $(BUILDDIR)/$(TARGET)/64 /data/bo/X-Plane\ 10/Resources/plugins/$(TARGET)/
 
 # Include any dependency turds, but don't error out if they don't exist.
 # On the first build, every .c is dirty anyway.  On future builds, if the

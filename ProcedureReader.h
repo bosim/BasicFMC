@@ -16,8 +16,8 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FREENAVPROCEDUREREADER_H
-#define FREENAVPROCEDUREREADER_H
+#ifndef PROCEDUREREADER_H
+#define PROCEDUREREADER_H
 
 #include <string>
 #include <vector>
@@ -26,24 +26,36 @@
 #include <cstdlib>
 #include <set>
 
-#include "ProcedureReader.h"
-
 #include "Utils.h"
 
-class Procedure;
-
-class FreeNavProcedureReader {
+class ProcedureWaypoint {
 public:
-  Procedure ReadProcedureLine(std::vector<std::string> const& elements, bool star);
+  ProcedureWaypoint();
 
-  void ReadSidWaypoint(std::vector<std::string> const& elements,
-                       Procedure& procedure, size_t offset);
-  void ReadSidFile(std::string Filename, std::vector<Procedure>& procedures);
+  std::string id;
+  float lon;
+  float lat;
+  int speed;
+  int altitude;
+};
 
-  void ReadStarWaypoint(std::vector<std::string> const& elements,
-                        Procedure& procedure, size_t offset);
-  void ReadStarFile(std::string Filename, std::vector<Procedure>& procedures);
+class Procedure {
+public:
+  std::string runway;
+  std::string name;
+  bool star;
+  std::vector<ProcedureWaypoint> waypoints;
+
+  Procedure();
+  void dump();
+};
+  
+
+class ProcedureReader {
+ public:
+  void ReadSidFile(std::string Airport, std::vector<Procedure>& procedures);
+  void ReadStarFile(std::string Airport, std::vector<Procedure>& procedures);
+  void GetRunways(std::vector<Procedure>& procedures, std::vector<std::string>& result);
 };
 
 #endif
-

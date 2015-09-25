@@ -1,23 +1,24 @@
-#include "ProcedureReader.h"
+/*
+ * BasicFMC - A very basic FMC for X-Plane
+ * Copyright (C) 2015 Bo Simonsen, <bo@geekworld.dk>
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-ProcedureWaypoint::ProcedureWaypoint() : id(""), lon(0), lat(0) {
-}
+#include "FreeNavProcedureReader.h"
 
-Procedure::Procedure() : runway(""), name(""), star(false), waypoints() {
-}
-
-void Procedure::dump() {
-  std::cout << this->runway << "," << this->name << std::endl;
-  for(size_t i=0; i < waypoints.size(); i++) {
-    std::cout << waypoints[i].id << " " <<
-      waypoints[i].lon << "," <<
-      waypoints[i].lat << " Speed " <<
-      waypoints[i].speed << " Altitude " <<
-      waypoints[i].altitude << std::endl;
-  }
-}
-
-Procedure ProcedureReader::ReadProcedureLine(std::vector<std::string> const& elements, bool star) {
+Procedure FreeNavProcedureReader::ReadProcedureLine(std::vector<std::string> const& elements, bool star) {
   Procedure procedure;
   
   procedure.runway = elements[0];
@@ -27,7 +28,7 @@ Procedure ProcedureReader::ReadProcedureLine(std::vector<std::string> const& ele
   return procedure;
 }
 
-void ProcedureReader::ReadSidWaypoint(std::vector<std::string> const& elements,
+void FreeNavProcedureReader::ReadSidWaypoint(std::vector<std::string> const& elements,
                                       Procedure& procedure, size_t offset) {
   ProcedureWaypoint waypoint;
 
@@ -42,7 +43,7 @@ void ProcedureReader::ReadSidWaypoint(std::vector<std::string> const& elements,
   }
 }
 
-void ProcedureReader::ReadSidFile(std::string Filename, std::vector<Procedure>& procedures) {
+void FreeNavProcedureReader::ReadSidFile(std::string Filename, std::vector<Procedure>& procedures) {
   std::ifstream filehandle(Filename.c_str());
   std::string line;
     
@@ -65,7 +66,7 @@ void ProcedureReader::ReadSidFile(std::string Filename, std::vector<Procedure>& 
   }
 }
 
-void ProcedureReader::ReadStarWaypoint(std::vector<std::string> const& elements,
+void FreeNavProcedureReader::ReadStarWaypoint(std::vector<std::string> const& elements,
                                        Procedure& procedure, size_t offset) {
   ProcedureWaypoint waypoint;
 
@@ -81,7 +82,7 @@ void ProcedureReader::ReadStarWaypoint(std::vector<std::string> const& elements,
   }
 }
 
-void ProcedureReader::ReadStarFile(std::string Filename, std::vector<Procedure>& procedures) {
+void FreeNavProcedureReader::ReadStarFile(std::string Filename, std::vector<Procedure>& procedures) {
   std::ifstream filehandle(Filename.c_str());
   std::string line;
     
@@ -103,21 +104,4 @@ void ProcedureReader::ReadStarFile(std::string Filename, std::vector<Procedure>&
     }
   }
 }
-
-void ProcedureReader::GetRunways(std::vector<Procedure>& procedures, std::vector<std::string>& result) {
-  std::set<std::string> set;
-
-  for(size_t i=0; i < procedures.size(); i++) {
-    if(set.find(procedures[i].runway) == set.end()) {
-      set.insert(procedures[i].runway);
-    }
-  }
-  
-  for(std::set<std::string>::iterator it = set.begin();
-      it != set.end();
-      ++it) {
-    result.push_back(*it);
-  }
-}
-
 
