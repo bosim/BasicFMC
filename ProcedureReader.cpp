@@ -18,6 +18,7 @@
 
 #include "ProcedureReader.h"
 #include "FreeNavProcedureReader.h"
+#include "GNSProcedureReader.h"
 
 #include <iostream>
 #include <fstream>
@@ -41,21 +42,31 @@ void Procedure::dump() {
 
 void ProcedureReader::ReadSidFile(std::string Airport, std::vector<Procedure>& procedures) {
   FreeNavProcedureReader freenav_pr;
+  GNSProcedureReader gns_pr;
 
-  std::string freenav_filename = GetProcedureFilename(Airport);
+  std::string freenav_filename = GetFreeNavProcedureFilename(Airport);
   std::ifstream freenav_handle(freenav_filename.c_str());
   if(freenav_handle.good()) {
     freenav_pr.ReadSidFile(freenav_filename, procedures);
+  }
+  else {
+    std::string gns_filename = GetGNSProcedureFilename(Airport);
+    gns_pr.ReadSidFile(gns_filename, procedures);
   }
 }
 
 void ProcedureReader::ReadStarFile(std::string Airport, std::vector<Procedure>& procedures) {
   FreeNavProcedureReader freenav_pr;
+  GNSProcedureReader gns_pr;
 
-  std::string freenav_filename = GetProcedureFilename(Airport, true);
+  std::string freenav_filename = GetFreeNavProcedureFilename(Airport, true);
   std::ifstream freenav_handle(freenav_filename.c_str());
   if(freenav_handle.good()) {
     freenav_pr.ReadStarFile(freenav_filename, procedures);
+  }
+  else {
+    std::string gns_filename = GetGNSProcedureFilename(Airport);
+    gns_pr.ReadStarFile(gns_filename, procedures);
   }
 }
 

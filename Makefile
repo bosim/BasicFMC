@@ -18,6 +18,7 @@ SOURCES = \
 	Utils.cpp \
 	ProcedureReader.cpp \
 	FreeNavProcedureReader.cpp \
+	GNSProcedureReader.cpp \
 	Main.cpp
 
 LIBS = 

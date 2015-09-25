@@ -50,10 +50,19 @@ std::string GetAirwayFilename(bool custom) {
   return AwyFile;
 }
 
-std::string GetProcedureFilename(std::string Airport, bool star) {
+std::string GetFreeNavProcedureFilename(std::string Airport, bool star) {
   std::string PluginDir = GetPluginDir();
   std::string Delimiter = std::string(XPLMGetDirectorySeparator());
   std::string ProcedureFilename = PluginDir + "FD_FMC" + Delimiter + Airport + Delimiter + (star ? "STAR_data.csv" : "SID_data.csv");
+
+  return ProcedureFilename;
+}
+
+std::string GetGNSProcedureFilename(std::string Airport) {
+  char buf[256];
+  XPLMGetSystemPath(buf);
+  std::string Delimiter = std::string(XPLMGetDirectorySeparator());
+  std::string ProcedureFilename = std::string(buf) + "Resources" + Delimiter + "GNS430" + Delimiter + "navdata" + Delimiter + "Proc" + Delimiter + Airport + ".txt";
 
   return ProcedureFilename;
 }

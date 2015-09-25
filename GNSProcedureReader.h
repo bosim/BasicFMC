@@ -16,24 +16,27 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef GNSPROCEDUREREADER_H
+#define GNSPROCEDUREREADER_H
 
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
+#include <cstdlib>
+#include <set>
 
-#define pi 3.14159265358979323846
+#include "ProcedureReader.h"
 
-/* Filenames */
-std::string GetPluginDir();
-std::string GetAirwayFilename(bool custom);
-std::string GetFreeNavProcedureFilename(std::string Airport, bool star=false);
-std::string GetGNSProcedureFilename(std::string Airport);
+#include "Utils.h"
 
-/* Misc functions */
-int CoordInRect(float x, float y, float l, float t, float r, float b);
-void SplitLine(std::string s, std::vector<std::string>& l, char delim, size_t times = 0);
-double distance(double lat1d, double lon1d, double lat2d, double lon2d);
+class Procedure;
+
+class GNSProcedureReader {
+public:
+  void ReadProcedures(std::string Filename, std::vector<Procedure>& procedures, bool star);
+  void ReadSidFile(std::string Filename, std::vector<Procedure>& procedures);
+  void ReadStarFile(std::string Filename, std::vector<Procedure>& procedures);
+};
 
 #endif
