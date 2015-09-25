@@ -125,8 +125,12 @@ void RoutePage::HandleSK(int key) {
         
         operation_index = this->routes.size() - 1;
       }
-      
-      std::string source = this->routes[operation_index-1].dest;
+
+      std::string source = "";
+      if(this->routes.size() > 1) {
+        source = this->routes[operation_index-1].dest;
+      }
+
       std::string airway = this->routes[operation_index].airway;
       std::string dest = this->input;
 
@@ -165,8 +169,11 @@ void RoutePage::HandleSK(int key) {
         }
       }
       else {
-        unsigned int insert_index = this->routes[operation_index-1].end_index;
- 
+        unsigned int insert_index = 0;
+        if(this->routes.size() > 1) { 
+          insert_index = this->routes[operation_index-1].end_index;
+        }
+
         /* Clear navaids storage to ensure consistency */
         this->flight->temp_navaids.clear();
 
