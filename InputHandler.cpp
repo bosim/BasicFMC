@@ -153,7 +153,7 @@ void InputHandler(int &dX, int &dY) {
   else if(CoordInRect(dX, dY, 79, -439, 107, -463)) {
     page->HandleInput('5');
   }
-  else if(CoordInRect(dX, dY, 112, -403, 141, -428)) {
+  else if(CoordInRect(dX, dY, 112, -439, 141, -463)) {
     page->HandleInput('6');
   }
   else if(CoordInRect(dX, dY, 43, -474, 71, -499)) {
