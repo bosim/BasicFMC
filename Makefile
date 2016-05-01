@@ -1,7 +1,8 @@
 # Makefile for BasicFMC (based on ExampleGauge code from Sandy Barbour 
 
 BUILDDIR	:=	./build
-SRC_BASE	:=	.
+SRC_BASE	:=	./src
+SDK_BASE	:=	./SDK
 TARGET		:= BasicFMC
 
 SOURCES = \
@@ -24,8 +25,8 @@ SOURCES = \
 LIBS = 
 
 INCLUDES = \
-	-I$(SRC_BASE)/SDK/CHeaders/XPLM \
-	-I$(SRC_BASE)/SDK/CHeaders/Widgets
+	-I$(SDK_BASE)/CHeaders/XPLM \
+	-I$(SDK_BASE)/CHeaders/Widgets
 
 DEFINES = -DAPL=0 -DIBM=0 -DLIN=1 -DXPLM200 -ggdb
 
