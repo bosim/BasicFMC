@@ -41,7 +41,9 @@ Then just compile
     $ make
 
 The X-Plane plugins are placed in `build/BasicFMC/32/lin.xpl` and 
-`build/BasicFMC/64/lin.xpl`.
+`build/BasicFMC/64/lin.xpl`. Copy the `build/BasicFMC` folder to
+`X-Plane/Resources/plugins/BasicFMC` and also copy over the fmc.bmp to
+that folder (the file is placed within this repository). 
 
 How does it look?
 -----------------
